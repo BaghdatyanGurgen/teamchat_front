@@ -1,0 +1,84 @@
+.company-layout {
+    display: flex;
+    height: 100vh;
+    background: #f5f7fb;
+}
+
+/* SIDEBAR */
+
+.chat-sidebar {
+    width: 280px;
+    background: #1f2937;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* CHAT AREA */
+
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+}
+
+/* TOP BAR */
+
+.chat-topbar {
+    height: 64px;
+    border-bottom: 1px solid #e6e6e6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    background: #ffffff;
+}
+
+.chat-topbar h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* CHAT CONTENT */
+
+.chat-container {
+    flex: 1;
+    overflow: auto;
+    padding: 24px;
+    background: #f9fafb;
+}
+
+/* PLACEHOLDER */
+
+.chat-placeholder {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #9ca3af;
+}
+
+/* BUTTON */
+
+.owner-btn {
+    background: #4f46e5;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.owner-btn:hover {
+    background: #4338ca;
+}
+

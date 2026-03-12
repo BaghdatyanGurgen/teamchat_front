@@ -1,0 +1,98 @@
+import { useMemo, useState } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
+
+import { CompanyChatList } from '../components/CompanyChatList';
+import { CompanyChat } from '../components/CompanyChat';
+import { OwnerPanel } from '../components/OwnerPanel';
+import { useAuth } from '../store/auth';
+import { useCompanyChats } from '../hooks/useCompanyChats';
+import { useCompanyPermissions } from '../hooks/useCompanyPermissions';
+import { useOwnerPanel } from '../hooks/useOwnerPanel';
+import { useUserPositions } from '../hooks/useUserPositions';
+
+import '../styles/companyLobby.css';
+
+export function CompanyLobbyPage() {
+    const { isAuthenticated } = useAuth();
+    const { companyId: companyIdParam } = useParams<{ companyId: string }>();
+    const companyId = useMemo(() => Number(companyIdParam), [companyIdParam]);
+
+    const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+
+    const { chats, isLoading: isChatsLoading, errorMessage: chatsErrorMessage } =
+        useCompanyChats(companyId);
+
+    const { canCreateDepartment, canCreatePosition } =
+        useCompanyPermissions(companyId);
+
+    const { positions, isLoading: isPositionsLoading, errorMessage: positionsErrorMessage } =
+        useUserPositions(companyId);
+
+    const { isOwnerPanelOpen, ownerPanelTab, openOwnerPanel, closeOwnerPanel, toggleOwnerPanelSection } =
+        useOwnerPanel();
+
+    const canAccessOwnerPanel = useMemo(
+        () => canCreateDepartment || canCreatePosition,
+        [canCreateDepartment, canCreatePosition]
+    );
+
+    const selectedChat = chats.find((chat) => chat.id === selectedChatId) ?? null;
+
+    if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+    return (
+        <main className="company-layout">
+
+            <aside className="chat-sidebar">
+                <h2 className="sidebar-title">Chats</h2>
+
+                <CompanyChatList
+                    chats={chats}
+                    isLoading={isChatsLoading}
+                    errorMessage={chatsErrorMessage}
+                    selectedChatId={selectedChatId}
+                    onSelectChat={setSelectedChatId}
+                />
+            </aside>
+
+            <section className="chat-main">
+
+                <div className="chat-topbar">
+                    <h2>{selectedChat ? selectedChat.name : 'Select chat'}</h2>
+
+                    {canAccessOwnerPanel && (
+                        <button className="owner-btn" onClick={openOwnerPanel}>
+                            Owner Panel
+                        </button>
+                    )}
+                </div>
+
+                <div className="chat-container">
+                    {selectedChat ? (
+                        <CompanyChat companyId={companyId} chatId={selectedChat.id} />
+                    ) : (
+                        <div className="chat-placeholder">
+                            Select a chat to start messaging
+                        </div>
+                    )}
+                </div>
+
+            </section>
+
+            {canAccessOwnerPanel && (
+                <OwnerPanel
+                    companyId={companyId}
+                    isOpen={isOwnerPanelOpen}
+                    onClose={closeOwnerPanel}
+                    canCreateDepartment={canCreateDepartment}
+                    canCreatePosition={canCreatePosition}
+                    ownerPanelTab={ownerPanelTab}
+                    toggleOwnerPanelSection={toggleOwnerPanelSection}
+                    positions={positions}
+                    isPositionsLoading={isPositionsLoading}
+                    positionsErrorMessage={positionsErrorMessage}
+                />
+            )}
+        </main>
+    );
+}
