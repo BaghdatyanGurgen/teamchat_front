@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { messageApi } from '../api/message';
 import { getHubConnection } from '../api/signalRClient';
 import type { MessageResponseDto } from '../types/api';
 import * as signalR from '@microsoft/signalr';
-import { useAuth } from '../store/auth'
+import { useAuth } from '../store/auth';
 
 export interface ChatMessageViewModel {
     id: string;
@@ -23,7 +23,6 @@ function mapMessage(message: MessageResponseDto, currentUserId?: string): ChatMe
     };
 }
 
-
 function getErrorMessage(error: unknown, fallback: string): string {
     if (error instanceof Error && error.message) return error.message;
     return fallback;
@@ -37,6 +36,11 @@ export function useChatMessages(chatId: string) {
     const { currentUser } = useAuth();
     const currentUserId = currentUser?.id;
     const joinedChatId = useRef<string | null>(null);
+
+    const currentUserIdRef = useRef(currentUserId);
+    useEffect(() => {
+        currentUserIdRef.current = currentUserId;
+    }, [currentUserId]);
 
     const loadMessages = useCallback(async () => {
         if (!chatId) {
@@ -52,7 +56,11 @@ export function useChatMessages(chatId: string) {
             const response = await messageApi.getByChatId(chatId);
 
             const mapped = response
-                .map((m) => mapMessage(m,  currentUserId))
+                .map((m) => {
+                    const vm = mapMessage(m, currentUserIdRef.current);
+                    console.log('[loadMessages] senderId:', m.senderId, '| currentUserId:', currentUserIdRef.current, '| isOwn:', vm.isOwn);
+                    return vm;
+                })
                 .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
             setMessages(mapped);
         } catch (error) {
@@ -70,13 +78,12 @@ export function useChatMessages(chatId: string) {
 
         const startAndJoin = async () => {
             try {
-
                 if (connection.state === signalR.HubConnectionState.Disconnected) {
                     await connection.start();
                 }
 
                 if (connection.state !== signalR.HubConnectionState.Connected) {
-                    console.warn("SignalR not connected yet");
+                    console.warn('SignalR not connected yet');
                     return;
                 }
 
@@ -87,9 +94,7 @@ export function useChatMessages(chatId: string) {
                 }
 
                 await connection.invoke('JoinChat', chatId);
-
                 joinedChatId.current = chatId;
-
             } catch (error) {
                 console.error('SignalR connection error:', error);
             }
@@ -98,7 +103,9 @@ export function useChatMessages(chatId: string) {
         const handleReceiveMessage = (message: MessageResponseDto) => {
             setMessages((prev) => {
                 if (prev.some((m) => m.id === message.id)) return prev;
-                return [...prev, mapMessage(message, currentUserId)];
+                const mapped = mapMessage(message, currentUserIdRef.current);
+                console.log('[ReceiveMessage] senderId:', message.senderId, '| currentUserId:', currentUserIdRef.current, '| isOwn:', mapped.isOwn);
+                return [...prev, mapped];
             });
         };
 

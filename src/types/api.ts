@@ -20,7 +20,7 @@ export interface UserProfileResponseDto {
 }
 
 export interface AuthResponseDto {
-  Profile: UserProfileResponseDto;
+  profile: UserProfileResponseDto;
   accessToken: string;
   refreshToken: string;
 }
