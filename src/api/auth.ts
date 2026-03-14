@@ -55,6 +55,11 @@ export const authApi = {
                 return profile;
             }),
 
+    changePassword: (oldPassword: string, newPassword: string): Promise<{ isSuccess: boolean; message?: string }> =>
+        httpClient
+            .patch('/user/change-password', { oldPassword, newPassword })
+            .then((response) => response.data),
+
     uploadAvatar: (formData: FormData): Promise<{ isSuccess: boolean; message?: string }> =>
         httpClient
             .post('/user/avatar', formData, {

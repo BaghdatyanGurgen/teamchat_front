@@ -1,4 +1,4 @@
-import { useEffect, useState, useEffect as useMountEffect, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { authApi } from '../api';
 import { useAuth } from '../store/auth';
@@ -68,7 +68,14 @@ export function LobbyPage() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
-  useMountEffect(() => { setMounted(true); }, []);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -190,6 +197,28 @@ export function LobbyPage() {
   const handleLogout = async () => {
     await logout();
     navigate('/login', { replace: true });
+  };
+
+  const handleChangePassword = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPasswordError(null);
+    setPasswordSuccess(null);
+
+    if (newPassword !== confirmPassword) { setPasswordError('Passwords do not match.'); return; }
+    if (newPassword.length < 6) { setPasswordError('Password must be at least 6 characters.'); return; }
+
+    setIsChangingPassword(true);
+    try {
+      await authApi.changePassword(oldPassword, newPassword);
+      setPasswordSuccess('Password changed successfully.');
+      setOldPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      setPasswordError(error instanceof Error ? error.message : 'Failed to change password.');
+    } finally {
+      setIsChangingPassword(false);
+    }
   };
 
   const userInitial = (currentUser?.firstName?.[0] ?? currentUser?.email?.[0] ?? '?').toUpperCase();
@@ -409,6 +438,56 @@ export function LobbyPage() {
                             disabled={isSavingProfile || !profileFirstName.trim() || !profileLastName.trim()}>
                       {isSavingProfile ? <span className="lobby-spinner" aria-hidden="true" /> : null}
                       {isSavingProfile ? 'Saving…' : 'Save changes'}
+                    </button>
+                  </div>
+                </form>
+
+                <div className="lobby-modal-divider" />
+
+                <form onSubmit={handleChangePassword} noValidate>
+                  <p className="lobby-modal-section-title">Change password</p>
+                  <div className="lobby-modal-field">
+                    <label className="lobby-modal-label" htmlFor="old-password">Current password</label>
+                    <input id="old-password" className="lobby-input" type="password" value={oldPassword}
+                           onChange={(e) => setOldPassword(e.target.value)} placeholder="••••••••" required />
+                  </div>
+                  <div className="lobby-modal-field" style={{ marginTop: 12 }}>
+                    <label className="lobby-modal-label" htmlFor="new-password">New password</label>
+                    <input id="new-password" className="lobby-input" type="password" value={newPassword}
+                           onChange={(e) => setNewPassword(e.target.value)} placeholder="••••••••" required />
+                  </div>
+                  <div className="lobby-modal-field" style={{ marginTop: 12 }}>
+                    <label className="lobby-modal-label" htmlFor="confirm-password">Confirm new password</label>
+                    <input id="confirm-password" className="lobby-input" type="password" value={confirmPassword}
+                           onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" required />
+                  </div>
+
+                  {passwordError ? (
+                      <div className="lobby-error" role="alert" aria-live="assertive" style={{ marginTop: 12 }}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                          <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+                          <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                          <circle cx="7" cy="10" r="0.75" fill="currentColor" />
+                        </svg>
+                        {passwordError}
+                      </div>
+                  ) : null}
+
+                  {passwordSuccess ? (
+                      <div className="lobby-success" role="status" aria-live="polite" style={{ marginTop: 12 }}>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                          <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+                          <path d="M4.5 7l2 2 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        {passwordSuccess}
+                      </div>
+                  ) : null}
+
+                  <div className="lobby-modal-actions" style={{ marginTop: 16 }}>
+                    <button className="lobby-btn-primary" type="submit"
+                            disabled={isChangingPassword || !oldPassword || !newPassword || !confirmPassword}>
+                      {isChangingPassword ? <span className="lobby-spinner" aria-hidden="true" /> : null}
+                      {isChangingPassword ? 'Saving…' : 'Change password'}
                     </button>
                   </div>
                 </form>

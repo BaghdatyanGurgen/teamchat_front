@@ -612,3 +612,18 @@
     color: var(--color-text-faint);
     margin: 2px 0 0;
 }
+.lobby-modal-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-lg) 0;
+}
+
+.lobby-modal-section-title {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-md) 0;
+}
