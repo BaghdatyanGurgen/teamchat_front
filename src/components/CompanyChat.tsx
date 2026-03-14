@@ -18,13 +18,21 @@ function isImageUrl(url: string): boolean {
     return /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
 }
 
-function getFileIcon(url: string): string {
-    if (/\.pdf$/i.test(url)) return 'PDF';
-    if (/\.(doc|docx)$/i.test(url)) return 'DOC';
-    if (/\.(xls|xlsx)$/i.test(url)) return 'XLS';
-    if (/\.(zip|rar|7z)$/i.test(url)) return 'ZIP';
-    if (/\.txt$/i.test(url)) return 'TXT';
+function getFileType(name: string): string {
+    if (/\.pdf$/i.test(name)) return 'PDF';
+    if (/\.(doc|docx)$/i.test(name)) return 'DOC';
+    if (/\.(xls|xlsx)$/i.test(name)) return 'XLS';
+    if (/\.(zip|rar|7z)$/i.test(name)) return 'ZIP';
+    if (/\.txt$/i.test(name)) return 'TXT';
+    if (/\.(mp4|mov|avi)$/i.test(name)) return 'VID';
+    if (/\.(mp3|wav|ogg)$/i.test(name)) return 'AUD';
     return 'FILE';
+}
+
+function formatFileSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
 export function CompanyChat({ chatId }: CompanyChatProps) {
@@ -147,7 +155,7 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
                                                     </a>
                                                 ) : (
                                                     <a key={a.id} href={fullUrl} target="_blank" rel="noopener noreferrer" className="chat-attachment-file">
-                                                        <span className="chat-attachment-file-badge">{getFileIcon(a.fileUrl)}</span>
+                                                        <div className="chat-attachment-file-icon">{getFileType(a.originalFileName || a.fileUrl)}</div>
                                                         <span className="chat-attachment-file-name">{decodeURIComponent(a.fileUrl.split('/').pop() ?? 'file')}</span>
                                                     </a>
                                                 );

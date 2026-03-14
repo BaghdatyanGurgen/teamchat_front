@@ -109,6 +109,7 @@ export interface CompanyUserResponseDto {
 export interface MessageAttachmentDto {
     id: Guid;
     fileUrl: string;
+    originalFileName: string;
 }
 
 export interface MessageResponseDto {

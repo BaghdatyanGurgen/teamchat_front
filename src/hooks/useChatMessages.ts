@@ -9,6 +9,7 @@ import {resolveAvatarUrl} from '../utils/avatarUrl';
 export interface ChatAttachmentViewModel {
     id: string;
     fileUrl: string;
+    originalFileName: string;
 }
 
 export interface ChatMessageViewModel {
@@ -32,7 +33,7 @@ function mapMessage(message: MessageResponseDto, currentUserId?: string, current
         createdAt: message.createdAt,
         editedAt: message.editedAt,
         isOwn,
-        attachments: message.attachments?.map(a => ({ id: a.id, fileUrl: a.fileUrl })) ?? [],
+        attachments: message.attachments?.map(a => ({ id: a.id, fileUrl: a.fileUrl, originalFileName: a.originalFileName ?? '' })) ?? [],
     };
 }
 
