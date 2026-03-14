@@ -4,6 +4,7 @@ import { getHubConnection } from '../api/signalRClient';
 import type { MessageResponseDto } from '../types/api';
 import * as signalR from '@microsoft/signalr';
 import { useAuth } from '../store/auth';
+import { resolveAvatarUrl } from '../utils/avatarUrl';
 
 export interface ChatMessageViewModel {
     id: string;
@@ -25,7 +26,7 @@ function mapMessage(
         authorName: message.senderName ?? 'Unknown user',
         // Для своих — берём аватар из store (всегда актуальный после обновления профиля),
         // для чужих — из senderAvatarUrl в ответе API
-        authorAvatarUrl: isOwn ? currentUserAvatarUrl : message.senderAvatarUrl,
+        authorAvatarUrl: resolveAvatarUrl(isOwn ? currentUserAvatarUrl : message.senderAvatarUrl),
         content: message.content,
         createdAt: message.createdAt,
         isOwn,
@@ -71,7 +72,7 @@ export function useChatMessages(chatId: string) {
             const response = await messageApi.getByChatId(chatId);
 
             const mapped = response
-                .map((m) => mapMessage(m, currentUserIdRef.current, currentUserAvatarRef.current))
+                .map((m) => mapMessage(m, currentUserId, currentUserAvatarUrl))
                 .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
             setMessages(mapped);
@@ -81,7 +82,7 @@ export function useChatMessages(chatId: string) {
         } finally {
             setIsLoading(false);
         }
-    }, [chatId]);
+    }, [chatId, currentUserId, currentUserAvatarUrl]);
 
     useEffect(() => {
         if (!chatId) return;

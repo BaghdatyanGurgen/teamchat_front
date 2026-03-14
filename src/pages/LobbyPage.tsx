@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { authApi } from '../api';
 import { useAuth } from '../store/auth';
 import type { CompanyResponseDto } from '../types/api';
+import { resolveAvatarUrl } from '../utils/avatarUrl';
 import '../styles/lobbyPage.css';
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -44,15 +45,18 @@ export function LobbyPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
+  // Create company modal
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [companyName, setCompanyName] = useState('');
   const [createErrorMessage, setCreateErrorMessage] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
+  // Join by invite
   const [inviteCode, setInviteCode] = useState('');
   const [joinErrorMessage, setJoinErrorMessage] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
 
+  // Profile modal
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileFirstName, setProfileFirstName] = useState('');
   const [profileLastName, setProfileLastName] = useState('');
@@ -60,6 +64,7 @@ export function LobbyPage() {
   const [profileError, setProfileError] = useState<string | null>(null);
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
 
+  // Avatar
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
@@ -157,9 +162,11 @@ export function LobbyPage() {
     if (!firstName || !lastName) { setProfileError('First and last name are required.'); return; }
     setIsSavingProfile(true);
     try {
+      // Save name — authApi.setUserProfile теперь возвращает чистый UserProfileResponseDto
       const updated = await authApi.setUserProfile({ firstName, lastName });
       setCurrentUser(updated);
 
+      // Upload avatar if selected
       if (avatarFile) {
         setIsUploadingAvatar(true);
         try {
@@ -190,7 +197,7 @@ export function LobbyPage() {
   const userDisplayName = currentUser?.firstName && currentUser?.lastName
       ? `${currentUser.firstName} ${currentUser.lastName}`
       : currentUser?.email ?? '';
-  const userAvatarUrl = (currentUser as any)?.avatarUrl as string | undefined;
+  const userAvatarUrl = resolveAvatarUrl(currentUser?.avatarUrl);
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
