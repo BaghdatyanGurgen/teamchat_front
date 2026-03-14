@@ -47,4 +47,11 @@ export const authApi = {
 
   setUserProfile: (payload: SetUserProfileRequestDto): Promise<UserProfileResponseDto> =>
     httpClient.patch<UserProfileResponseDto>('/user/set-user-profile', payload).then((response) => response.data),
+
+  uploadAvatar: (formData: FormData): Promise<{ isSuccess: boolean; message?: string }> =>
+      httpClient
+          .post('/user/avatar', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          })
+          .then((response) => response.data),
 };
