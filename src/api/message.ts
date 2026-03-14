@@ -27,4 +27,12 @@ export const messageApi = {
 
     delete: (messageId: Guid): Promise<void> =>
         httpClient.delete(`/message/${messageId}`).then(() => undefined),
+
+    markAllAsRead: (chatId: Guid): Promise<void> =>
+        httpClient.post(`/message/${chatId}/read`).then(() => undefined),
+
+    getUnreadCounts: (companyId: number): Promise<Record<string, number>> =>
+        httpClient
+            .get<ResponseModel<Record<string, number>>>(`/message/unread/${companyId}`)
+            .then((response) => response.data.Data ?? response.data.data ?? {}),
 };

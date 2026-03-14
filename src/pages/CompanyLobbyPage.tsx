@@ -12,6 +12,7 @@ import { useUserPositions } from '../hooks/useUserPositions';
 import { authApi } from '../api';
 import type { CompanyChatResponseDto, CompanyResponseDto } from '../types/api';
 
+import { useUnreadCounts } from '../hooks/useUnreadCounts';
 import '../styles/companyLobby.css';
 
 export function CompanyLobbyPage() {
@@ -41,6 +42,8 @@ export function CompanyLobbyPage() {
     const { positions, isLoading: isPositionsLoading, errorMessage: positionsErrorMessage } =
         useUserPositions(companyId);
 
+    const { unreadCounts, markAsRead } = useUnreadCounts(companyId);
+
     const { isOwnerPanelOpen, ownerPanelTab, openOwnerPanel, closeOwnerPanel, toggleOwnerPanelSection } =
         useOwnerPanel();
 
@@ -48,6 +51,11 @@ export function CompanyLobbyPage() {
         () => canCreateDepartment || canCreatePosition || canCreateChat,
         [canCreateDepartment, canCreatePosition, canCreateChat]
     );
+
+    const handleSelectChat = (chatId: string) => {
+        setSelectedChatId(chatId);
+        markAsRead(chatId);
+    };
 
     const selectedChat = chats.find((chat) => chat.id === selectedChatId) ?? null;
 
@@ -81,7 +89,8 @@ export function CompanyLobbyPage() {
                     isLoading={isChatsLoading}
                     errorMessage={chatsErrorMessage}
                     selectedChatId={selectedChatId}
-                    onSelectChat={setSelectedChatId}
+                    onSelectChat={handleSelectChat}
+                    unreadCounts={unreadCounts}
                 />
             </aside>
 

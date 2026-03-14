@@ -146,7 +146,10 @@ export function useChatMessages(chatId: string) {
         }
     }, []);
 
-    useEffect(() => { void loadMessages(); }, [loadMessages]);
+    useEffect(() => {
+        void loadMessages();
+        if (chatId) void messageApi.markAllAsRead(chatId).catch(() => undefined);
+    }, [loadMessages, chatId]);
 
     return { messages, isLoading, errorMessage, isSending, sendMessage, editMessage, deleteMessage };
 }
