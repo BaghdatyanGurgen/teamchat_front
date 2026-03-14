@@ -18,6 +18,15 @@ function isImageUrl(url: string): boolean {
     return /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
 }
 
+function getFileIcon(url: string): string {
+    if (/\.pdf$/i.test(url)) return 'PDF';
+    if (/\.(doc|docx)$/i.test(url)) return 'DOC';
+    if (/\.(xls|xlsx)$/i.test(url)) return 'XLS';
+    if (/\.(zip|rar|7z)$/i.test(url)) return 'ZIP';
+    if (/\.txt$/i.test(url)) return 'TXT';
+    return 'FILE';
+}
+
 export function CompanyChat({ chatId }: CompanyChatProps) {
     const { messages, isLoading, errorMessage, isSending, sendMessage, editMessage, deleteMessage } = useChatMessages(chatId);
     const [draftMessage, setDraftMessage] = useState('');
@@ -138,11 +147,8 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
                                                     </a>
                                                 ) : (
                                                     <a key={a.id} href={fullUrl} target="_blank" rel="noopener noreferrer" className="chat-attachment-file">
-                                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                                            <path d="M3 2h6l3 3v7a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                            <path d="M9 2v3h3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                        </svg>
-                                                        {a.fileUrl.split('/').pop()}
+                                                        <span className="chat-attachment-file-badge">{getFileIcon(a.fileUrl)}</span>
+                                                        <span className="chat-attachment-file-name">{decodeURIComponent(a.fileUrl.split('/').pop() ?? 'file')}</span>
                                                     </a>
                                                 );
                                             })}
