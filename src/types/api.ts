@@ -36,10 +36,6 @@ export interface RefreshTokenRequestDto {
     refreshToken: string;
 }
 
-export interface LogoutResponseDto {
-    message: string;
-}
-
 export interface CreateDraftRequestDto {
     email: string;
 }
@@ -82,16 +78,6 @@ export interface CreateChatRequestDto {
     companyId: number;
 }
 
-export interface ChatResponseDto {
-    id: Guid;
-    name: string;
-    scope: number;
-    departmentId?: number;
-    teamId?: number;
-    companyId: number;
-    createdAt?: string;
-}
-
 export interface CompanyChatResponseDto {
     id: Guid;
     name: string;
@@ -120,6 +106,11 @@ export interface CompanyUserResponseDto {
     permissions: number;
 }
 
+export interface MessageAttachmentDto {
+    id: Guid;
+    fileUrl: string;
+}
+
 export interface MessageResponseDto {
     id: Guid;
     chatId: Guid;
@@ -129,6 +120,7 @@ export interface MessageResponseDto {
     content: string;
     createdAt: string;
     editedAt?: string;
+    attachments?: MessageAttachmentDto[];
 }
 
 export interface SendMessageRequestDto {
@@ -145,11 +137,6 @@ export interface CompanyResponseDto {
 
 export interface CreateCompanyRequestDto {
     name: string;
-}
-
-export interface SetCompanyDetailsRequestDto {
-    description: string;
-    logoFile: File;
 }
 
 export interface SetCompanyDetailsResponseDto {

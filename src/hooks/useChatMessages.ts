@@ -6,6 +6,11 @@ import * as signalR from '@microsoft/signalr';
 import {useAuth} from '../store/auth';
 import {resolveAvatarUrl} from '../utils/avatarUrl';
 
+export interface ChatAttachmentViewModel {
+    id: string;
+    fileUrl: string;
+}
+
 export interface ChatMessageViewModel {
     id: string;
     authorName: string;
@@ -14,6 +19,7 @@ export interface ChatMessageViewModel {
     createdAt: string;
     editedAt?: string;
     isOwn: boolean;
+    attachments: ChatAttachmentViewModel[];
 }
 
 function mapMessage(message: MessageResponseDto, currentUserId?: string, currentUserAvatarUrl?: string): ChatMessageViewModel {
@@ -26,6 +32,7 @@ function mapMessage(message: MessageResponseDto, currentUserId?: string, current
         createdAt: message.createdAt,
         editedAt: message.editedAt,
         isOwn,
+        attachments: message.attachments?.map(a => ({ id: a.id, fileUrl: a.fileUrl })) ?? [],
     };
 }
 
@@ -53,11 +60,7 @@ export function useChatMessages(chatId: string) {
     }, [currentUserId, currentUserAvatarUrl]);
 
     const loadMessages = useCallback(async () => {
-        if (!chatId) {
-            setMessages([]);
-            setErrorMessage('Invalid chat context.');
-            return;
-        }
+        if (!chatId) { setMessages([]); setErrorMessage('Invalid chat context.'); return; }
         setIsLoading(true);
         setErrorMessage(null);
         try {
@@ -120,13 +123,13 @@ export function useChatMessages(chatId: string) {
         };
     }, [chatId]);
 
-    const sendMessage = useCallback(async (content: string) => {
+    const sendMessage = useCallback(async (content: string, attachment?: File) => {
         const trimmedContent = content.trim();
-        if (!trimmedContent) return;
+        if (!trimmedContent && !attachment) return;
         setIsSending(true);
         setErrorMessage(null);
         try {
-            await messageApi.send({chatId, content: trimmedContent});
+            await messageApi.send(chatId, trimmedContent, attachment);
         } catch (error) {
             setErrorMessage(getErrorMessage(error, 'Failed to send message.'));
         } finally {

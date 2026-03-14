@@ -1,5 +1,5 @@
-import {httpClient} from './httpClient';
-import type {Guid, MessageResponseDto, ResponseModel, SendMessageRequestDto} from '../types/api';
+import { httpClient } from './httpClient';
+import type { Guid, MessageResponseDto, ResponseModel } from '../types/api';
 
 export const messageApi = {
     getByChatId: (chatId: Guid): Promise<MessageResponseDto[]> =>
@@ -7,18 +7,26 @@ export const messageApi = {
             .get<ResponseModel<MessageResponseDto[]>>(`/message/${chatId}`)
             .then((response) => response.data.Data ?? response.data.data ?? []),
 
-    send: (payload: SendMessageRequestDto): Promise<MessageResponseDto> =>
-        httpClient
-            .post<ResponseModel<MessageResponseDto>>('/message/send', payload)
+    send: (chatId: Guid, content: string, attachment?: File): Promise<MessageResponseDto> => {
+        const formData = new FormData();
+        formData.append('chatId', chatId);
+        formData.append('content', content);
+        if (attachment) formData.append('attachment', attachment);
+
+        return httpClient
+            .post<ResponseModel<MessageResponseDto>>('/message/send', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            })
             .then((response) => {
                 const data = response.data.Data ?? response.data.data;
                 if (!data) throw new Error(response.data.Message ?? response.data.message ?? 'Failed to send message.');
                 return data;
-            }),
+            });
+    },
 
     edit: (messageId: Guid, content: string): Promise<MessageResponseDto> =>
         httpClient
-            .patch<ResponseModel<MessageResponseDto>>(`/message/${messageId}`, {content})
+            .patch<ResponseModel<MessageResponseDto>>(`/message/${messageId}`, { content })
             .then((response) => {
                 const data = response.data.Data ?? response.data.data;
                 if (!data) throw new Error(response.data.Message ?? response.data.message ?? 'Failed to edit message.');

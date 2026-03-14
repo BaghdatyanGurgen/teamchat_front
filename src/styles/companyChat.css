@@ -326,3 +326,115 @@
     border: 1px solid var(--color-border-input);
     color: var(--color-text-muted);
 }
+.chat-attach-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.chat-attach-btn:hover {
+    color: var(--color-accent);
+    border-color: rgba(255, 107, 53, 0.4);
+}
+
+.chat-attachments {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+}
+
+.chat-attachment-img {
+    max-width: 260px;
+    max-height: 200px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    display: block;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.chat-attachment-img:hover {
+    opacity: 0.9;
+}
+
+.chat-attachment-file {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 6px var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-attachment-file:hover {
+    color: var(--color-accent-light);
+    border-color: rgba(255, 107, 53, 0.3);
+}
+
+.chat-attachment-preview {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.chat-attachment-preview-img {
+    height: 48px;
+    width: 48px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+}
+
+.chat-attachment-preview-name {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--color-text-muted);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-attachment-preview-remove {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.chat-attachment-preview-remove:hover {
+    color: var(--color-error-text);
+    border-color: var(--color-error-border);
+}
