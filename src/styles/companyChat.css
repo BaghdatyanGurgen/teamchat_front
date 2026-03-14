@@ -218,3 +218,98 @@
 .chat-message--own .chat-avatar {
     background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent));
 }
+.chat-edited {
+    font-size: 10px;
+    color: var(--color-text-faint);
+    letter-spacing: 0.04em;
+}
+
+.chat-message-actions {
+    display: none;
+    align-items: center;
+    gap: 2px;
+    align-self: flex-start;
+    margin-top: 18px;
+    flex-shrink: 0;
+}
+
+.chat-message:hover .chat-message-actions {
+    display: flex;
+}
+
+.chat-action-btn {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 0;
+    transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.chat-action-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-input);
+    background: var(--color-surface);
+}
+
+.chat-action-btn--delete:hover {
+    color: var(--color-error-text);
+    border-color: var(--color-error-border);
+    background: var(--color-error-bg);
+}
+
+.chat-edit-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    width: 100%;
+}
+
+.chat-edit-input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 107, 53, 0.45);
+    border-radius: var(--radius-md);
+    padding: 8px var(--space-md);
+    color: var(--color-text);
+    font-family: var(--font-text);
+    font-size: 14px;
+    line-height: 1.5;
+    outline: none;
+    resize: none;
+    caret-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.08);
+    width: 100%;
+}
+
+.chat-edit-actions {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.chat-edit-btn {
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity var(--transition-fast);
+}
+
+.chat-edit-btn--save {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    color: #fff;
+}
+
+.chat-edit-btn--cancel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-input);
+    color: var(--color-text-muted);
+}

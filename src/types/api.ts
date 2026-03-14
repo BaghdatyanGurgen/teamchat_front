@@ -14,7 +14,7 @@ export interface UserProfileResponseDto {
   email: string;
   firstName?: string;
   lastName?: string;
-  avatarUrl?: string;   // аватарка пользователя
+  avatarUrl?: string;
   companyId?: number;
   departmentId?: number;
   teamId?: number;
@@ -125,9 +125,10 @@ export interface MessageResponseDto {
   chatId: Guid;
   senderId?: Guid;
   senderName?: string;
-  senderAvatarUrl?: string;   // аватарка отправителя
+  senderAvatarUrl?: string;
   content: string;
   createdAt: string;
+  editedAt?: string;
 }
 
 export interface SendMessageRequestDto {
@@ -152,7 +153,8 @@ export interface SetCompanyDetailsRequestDto {
 }
 
 export interface SetCompanyDetailsResponseDto {
-  companyId: number;
+  id: number;
+  name: string;
   description: string;
   logoUrl?: string;
 }
@@ -179,13 +181,6 @@ export interface CreateCompanyPositionResponseDto {
   companyId: number;
   title: string;
   permissions: number;
-}
-
-export interface SetCompanyDetailsResponseDto {
-  id: number;
-  name: string;
-  description: string;
-  logoUrl?: string;
 }
 
 export interface UserPositionResponseDto {

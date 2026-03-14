@@ -12,23 +12,19 @@ export interface ChatMessageViewModel {
     authorAvatarUrl?: string;
     content: string;
     createdAt: string;
+    editedAt?: string;
     isOwn: boolean;
 }
 
-function mapMessage(
-    message: MessageResponseDto,
-    currentUserId?: string,
-    currentUserAvatarUrl?: string,
-): ChatMessageViewModel {
+function mapMessage(message: MessageResponseDto, currentUserId?: string, currentUserAvatarUrl?: string): ChatMessageViewModel {
     const isOwn = !!currentUserId && message.senderId === currentUserId;
     return {
         id: message.id,
         authorName: message.senderName ?? 'Unknown user',
-        // Для своих — берём аватар из store (всегда актуальный после обновления профиля),
-        // для чужих — из senderAvatarUrl в ответе API
         authorAvatarUrl: resolveAvatarUrl(isOwn ? currentUserAvatarUrl : message.senderAvatarUrl),
         content: message.content,
         createdAt: message.createdAt,
+        editedAt: message.editedAt,
         isOwn,
     };
 }
@@ -47,34 +43,24 @@ export function useChatMessages(chatId: string) {
     const { currentUser } = useAuth();
     const currentUserId = currentUser?.id;
     const currentUserAvatarUrl = currentUser?.avatarUrl;
-
     const joinedChatId = useRef<string | null>(null);
-
-    // Refs для SignalR-хендлера — всегда актуальны без пересоздания
     const currentUserIdRef = useRef(currentUserId);
     const currentUserAvatarRef = useRef(currentUserAvatarUrl);
+
     useEffect(() => {
         currentUserIdRef.current = currentUserId;
         currentUserAvatarRef.current = currentUserAvatarUrl;
     }, [currentUserId, currentUserAvatarUrl]);
 
     const loadMessages = useCallback(async () => {
-        if (!chatId) {
-            setMessages([]);
-            setErrorMessage('Invalid chat context.');
-            return;
-        }
-
+        if (!chatId) { setMessages([]); setErrorMessage('Invalid chat context.'); return; }
         setIsLoading(true);
         setErrorMessage(null);
-
         try {
             const response = await messageApi.getByChatId(chatId);
-
             const mapped = response
                 .map((m) => mapMessage(m, currentUserId, currentUserAvatarUrl))
                 .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-
             setMessages(mapped);
         } catch (error) {
             setMessages([]);
@@ -86,22 +72,14 @@ export function useChatMessages(chatId: string) {
 
     useEffect(() => {
         if (!chatId) return;
-
         const connection = getHubConnection();
 
         const startAndJoin = async () => {
             try {
-                if (connection.state === signalR.HubConnectionState.Disconnected) {
-                    await connection.start();
-                }
-                if (connection.state !== signalR.HubConnectionState.Connected) {
-                    console.warn('SignalR not connected yet');
-                    return;
-                }
+                if (connection.state === signalR.HubConnectionState.Disconnected) await connection.start();
+                if (connection.state !== signalR.HubConnectionState.Connected) return;
                 if (joinedChatId.current === chatId) return;
-                if (joinedChatId.current) {
-                    await connection.invoke('LeaveChat', joinedChatId.current);
-                }
+                if (joinedChatId.current) await connection.invoke('LeaveChat', joinedChatId.current);
                 await connection.invoke('JoinChat', chatId);
                 joinedChatId.current = chatId;
             } catch (error) {
@@ -116,42 +94,59 @@ export function useChatMessages(chatId: string) {
             });
         };
 
+        const handleMessageEdited = (message: MessageResponseDto) => {
+            setMessages((prev) =>
+                prev.map((m) => m.id === message.id ? { ...m, content: message.content, editedAt: message.editedAt } : m)
+            );
+        };
+
+        const handleMessageDeleted = (data: { messageId: string }) => {
+            setMessages((prev) => prev.filter((m) => m.id !== data.messageId));
+        };
+
         connection.on('ReceiveMessage', handleReceiveMessage);
+        connection.on('MessageEdited', handleMessageEdited);
+        connection.on('MessageDeleted', handleMessageDeleted);
         void startAndJoin();
 
         return () => {
             connection.off('ReceiveMessage', handleReceiveMessage);
+            connection.off('MessageEdited', handleMessageEdited);
+            connection.off('MessageDeleted', handleMessageDeleted);
         };
     }, [chatId]);
 
-    const sendMessage = useCallback(
-        async (content: string) => {
-            const trimmedContent = content.trim();
-            if (!trimmedContent) return;
+    const sendMessage = useCallback(async (content: string) => {
+        const trimmedContent = content.trim();
+        if (!trimmedContent) return;
+        setIsSending(true);
+        setErrorMessage(null);
+        try {
+            await messageApi.send({ chatId, content: trimmedContent });
+        } catch (error) {
+            setErrorMessage(getErrorMessage(error, 'Failed to send message.'));
+        } finally {
+            setIsSending(false);
+        }
+    }, [chatId]);
 
-            setIsSending(true);
-            setErrorMessage(null);
+    const editMessage = useCallback(async (messageId: string, content: string) => {
+        try {
+            await messageApi.edit(messageId, content);
+        } catch (error) {
+            setErrorMessage(getErrorMessage(error, 'Failed to edit message.'));
+        }
+    }, []);
 
-            try {
-                await messageApi.send({ chatId, content: trimmedContent });
-            } catch (error) {
-                setErrorMessage(getErrorMessage(error, 'Failed to send message.'));
-            } finally {
-                setIsSending(false);
-            }
-        },
-        [chatId],
-    );
+    const deleteMessage = useCallback(async (messageId: string) => {
+        try {
+            await messageApi.delete(messageId);
+        } catch (error) {
+            setErrorMessage(getErrorMessage(error, 'Failed to delete message.'));
+        }
+    }, []);
 
-    useEffect(() => {
-        void loadMessages();
-    }, [loadMessages]);
+    useEffect(() => { void loadMessages(); }, [loadMessages]);
 
-    return {
-        messages,
-        isLoading,
-        errorMessage,
-        isSending,
-        sendMessage,
-    };
+    return { messages, isLoading, errorMessage, isSending, sendMessage, editMessage, deleteMessage };
 }
