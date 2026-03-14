@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent} from 'react';
+import React, {useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent} from 'react';
 import {useChatMessages} from '../hooks/useChatMessages';
 import '../styles/companyChat.css';
 
@@ -56,6 +56,13 @@ export function CompanyChat({chatId}: CompanyChatProps) {
         if (!trimmed) return;
         await editMessage(messageId, trimmed);
         cancelEditing();
+    };
+
+    const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey && !isSubmitDisabled) {
+            e.preventDefault();
+            void sendMessage(draftMessage).then(() => setDraftMessage(''));
+        }
     };
 
     const handleEditKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>, messageId: string) => {
@@ -143,6 +150,7 @@ export function CompanyChat({chatId}: CompanyChatProps) {
                     id={`company-chat-message-${chatId}`}
                     value={draftMessage}
                     onChange={(event) => setDraftMessage(event.target.value)}
+                    onKeyDown={handleInputKeyDown}
                     placeholder="Type a message..."
                 />
                 <button className="chat-send-button" type="submit" disabled={isSubmitDisabled}>
