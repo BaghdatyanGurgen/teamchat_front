@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { useChatMessages } from '../hooks/useChatMessages';
+import {useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent} from 'react';
+import {useChatMessages} from '../hooks/useChatMessages';
 import '../styles/companyChat.css';
 
 interface CompanyChatProps {
@@ -10,11 +10,19 @@ interface CompanyChatProps {
 function formatTimestamp(value: string): string {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return value;
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 }
 
-export function CompanyChat({ chatId }: CompanyChatProps) {
-    const { messages, isLoading, errorMessage, isSending, sendMessage, editMessage, deleteMessage } = useChatMessages(chatId);
+export function CompanyChat({chatId}: CompanyChatProps) {
+    const {
+        messages,
+        isLoading,
+        errorMessage,
+        isSending,
+        sendMessage,
+        editMessage,
+        deleteMessage
+    } = useChatMessages(chatId);
     const [draftMessage, setDraftMessage] = useState('');
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editingContent, setEditingContent] = useState('');
@@ -22,7 +30,9 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
 
     const isSubmitDisabled = useMemo(() => isSending || !draftMessage.trim(), [isSending, draftMessage]);
 
-    useEffect(() => { scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+    useEffect(() => {
+        scrollAnchorRef.current?.scrollIntoView({behavior: 'smooth'});
+    }, [messages]);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -32,8 +42,14 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
         setDraftMessage('');
     };
 
-    const startEditing = (id: string, content: string) => { setEditingId(id); setEditingContent(content); };
-    const cancelEditing = () => { setEditingId(null); setEditingContent(''); };
+    const startEditing = (id: string, content: string) => {
+        setEditingId(id);
+        setEditingContent(content);
+    };
+    const cancelEditing = () => {
+        setEditingId(null);
+        setEditingContent('');
+    };
 
     const submitEdit = async (messageId: string) => {
         const trimmed = editingContent.trim();
@@ -43,7 +59,10 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
     };
 
     const handleEditKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>, messageId: string) => {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); void submitEdit(messageId); }
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            void submitEdit(messageId);
+        }
         if (e.key === 'Escape') cancelEditing();
     };
 
@@ -57,7 +76,8 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
                     <article key={message.id} className={`chat-message${message.isOwn ? ' chat-message--own' : ''}`}>
                         <div className="chat-avatar">
                             {message.authorAvatarUrl
-                                ? <img src={message.authorAvatarUrl} alt={message.authorName} className="chat-avatar-img" />
+                                ? <img src={message.authorAvatarUrl} alt={message.authorName}
+                                       className="chat-avatar-img"/>
                                 : message.authorName.charAt(0).toUpperCase()}
                         </div>
 
@@ -81,8 +101,12 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
                                         rows={2}
                                     />
                                     <div className="chat-edit-actions">
-                                        <button className="chat-edit-btn chat-edit-btn--save" type="button" onClick={() => void submitEdit(message.id)}>Save</button>
-                                        <button className="chat-edit-btn chat-edit-btn--cancel" type="button" onClick={cancelEditing}>Cancel</button>
+                                        <button className="chat-edit-btn chat-edit-btn--save" type="button"
+                                                onClick={() => void submitEdit(message.id)}>Save
+                                        </button>
+                                        <button className="chat-edit-btn chat-edit-btn--cancel" type="button"
+                                                onClick={cancelEditing}>Cancel
+                                        </button>
                                     </div>
                                 </div>
                             ) : (
@@ -92,21 +116,25 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
 
                         {message.isOwn && editingId !== message.id && (
                             <div className="chat-message-actions">
-                                <button className="chat-action-btn" type="button" title="Edit" onClick={() => startEditing(message.id, message.content)}>
+                                <button className="chat-action-btn" type="button" title="Edit"
+                                        onClick={() => startEditing(message.id, message.content)}>
                                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                                        <path d="M9 2l2 2L4 11H2V9L9 2z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M9 2l2 2L4 11H2V9L9 2z" stroke="currentColor" strokeWidth="1.2"
+                                              strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                 </button>
-                                <button className="chat-action-btn chat-action-btn--delete" type="button" title="Delete" onClick={() => void deleteMessage(message.id)}>
+                                <button className="chat-action-btn chat-action-btn--delete" type="button" title="Delete"
+                                        onClick={() => void deleteMessage(message.id)}>
                                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                                        <path d="M2 4h9M5 4V3h3v1M10 4l-.7 7H3.7L3 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M2 4h9M5 4V3h3v1M10 4l-.7 7H3.7L3 4" stroke="currentColor"
+                                              strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                 </button>
                             </div>
                         )}
                     </article>
                 ))}
-                <div ref={scrollAnchorRef} />
+                <div ref={scrollAnchorRef}/>
             </div>
 
             <form className="chat-input-form" onSubmit={handleSubmit}>

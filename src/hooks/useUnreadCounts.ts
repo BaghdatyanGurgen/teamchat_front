@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { messageApi } from '../api/message';
+import {useCallback, useEffect, useState} from 'react';
+import {messageApi} from '../api';
 
 export function useUnreadCounts(companyId: number) {
     const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
@@ -10,19 +10,20 @@ export function useUnreadCounts(companyId: number) {
             const counts = await messageApi.getUnreadCounts(companyId);
             setUnreadCounts(counts);
         } catch {
-            // silent
         }
     }, [companyId]);
 
-    useEffect(() => { void fetchUnreadCounts(); }, [fetchUnreadCounts]);
+    useEffect(() => {
+        void fetchUnreadCounts();
+    }, [fetchUnreadCounts]);
 
     const markAsRead = useCallback((chatId: string) => {
         setUnreadCounts((prev) => {
-            const next = { ...prev };
+            const next = {...prev};
             delete next[chatId];
             return next;
         });
     }, []);
 
-    return { unreadCounts, markAsRead, refetch: fetchUnreadCounts };
+    return {unreadCounts, markAsRead, refetch: fetchUnreadCounts};
 }

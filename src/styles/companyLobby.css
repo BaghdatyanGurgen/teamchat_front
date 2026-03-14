@@ -17,7 +17,7 @@
 }
 
 .sidebar-title {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -39,7 +39,7 @@
     border: none;
     border-bottom: 1px solid var(--color-border);
     color: var(--color-text-muted);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -60,7 +60,6 @@
 .sidebar-back-btn:hover svg {
     transform: translateX(-2px);
 }
-
 
 
 /* CHAT AREA */
@@ -87,7 +86,7 @@
 }
 
 .chat-topbar h2 {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 15px;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -112,7 +111,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 15px;
     font-style: italic;
     color: var(--color-text-faint);
@@ -126,7 +125,7 @@
     color: var(--color-text-muted);
     padding: 7px var(--space-md);
     border-radius: var(--radius-md);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.04em;

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from '@microsoft/signalr';
-
-import { messageApi } from '../../../api/message';
-import { useAuth } from '../../../hooks/useAuth';
+import { messageApi } from '../../../api';
+import { useAuth } from '../../../store/auth';
 import type { MessageResponseDto } from '../../../types/api';
 
 const RECEIVE_EVENT = 'receiveMessage';

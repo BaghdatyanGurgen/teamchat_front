@@ -1,6 +1,5 @@
 import { useEffect, useState, useEffect as useMountEffect, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-
 import { authApi } from '../api';
 import { useAuth } from '../store/auth';
 import type { CompanyResponseDto } from '../types/api';

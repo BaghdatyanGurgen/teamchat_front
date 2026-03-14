@@ -1,5 +1,5 @@
 import * as signalR from '@microsoft/signalr';
-import { useAuthStore } from '../store/auth';
+import {useAuthStore} from '../store/auth';
 
 let connection: signalR.HubConnection | null = null;
 

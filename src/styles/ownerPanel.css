@@ -1,7 +1,3 @@
-/* ownerPanel.css — shared styles for owner panel components */
-
-/* ── Panel backdrop ──────────────────────────────── */
-
 .company-owner-panel-backdrop {
     position: fixed;
     inset: 0;
@@ -17,8 +13,6 @@
     from { opacity: 0; }
     to   { opacity: 1; }
 }
-
-/* ── Panel ───────────────────────────────────────── */
 
 .company-owner-panel {
     width: min(400px, 100%);
@@ -45,8 +39,6 @@
     border-radius: 2px;
 }
 
-/* ── Panel header ────────────────────────────────── */
-
 .company-owner-panel-header {
     display: flex;
     align-items: center;
@@ -57,7 +49,7 @@
 }
 
 .company-owner-panel-header h2 {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 15px;
     font-weight: 700;
     color: var(--color-text);
@@ -86,8 +78,6 @@
     border-color: var(--color-border-input);
 }
 
-/* ── Nav buttons (Create Dept / Position / My Positions) */
-
 .op-nav {
     display: flex;
     flex-direction: column;
@@ -105,7 +95,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     color: var(--color-text-muted);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -140,8 +130,6 @@
     transform: rotate(180deg);
 }
 
-/* ── Section (form container) ────────────────────── */
-
 .op-section {
     padding: var(--space-md) var(--space-xl);
     border-top: 1px solid var(--color-border);
@@ -152,8 +140,6 @@
     from { opacity: 0; transform: translateY(-6px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-
-/* ── Form ────────────────────────────────────────── */
 
 .op-form {
     display: flex;
@@ -168,7 +154,7 @@
 }
 
 .op-label {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.09em;
@@ -183,7 +169,7 @@
     border-radius: var(--radius-md);
     padding: 9px var(--space-md);
     color: var(--color-text);
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     outline: none;
     transition: border-color var(--transition-mid), box-shadow var(--transition-mid);
@@ -209,8 +195,6 @@
     box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.08);
 }
 
-/* ── Feedback ────────────────────────────────────── */
-
 .op-error {
     display: flex;
     align-items: center;
@@ -221,7 +205,7 @@
     border-radius: var(--radius-md);
     color: var(--color-error-text);
     font-size: 13px;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
 }
 
 .op-success {
@@ -234,10 +218,8 @@
     border-radius: var(--radius-md);
     color: var(--color-online);
     font-size: 13px;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
 }
-
-/* ── Submit button ───────────────────────────────── */
 
 .op-btn {
     display: flex;
@@ -249,7 +231,7 @@
     color: #fff;
     border: none;
     border-radius: var(--radius-md);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -270,8 +252,6 @@
     box-shadow: none;
 }
 
-/* ── Spinner ─────────────────────────────────────── */
-
 .op-spinner {
     width: 13px;
     height: 13px;
@@ -286,8 +266,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* ── Fieldset / permissions ──────────────────────── */
-
 .op-fieldset {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -296,7 +274,7 @@
 }
 
 .op-legend {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.09em;
@@ -352,7 +330,7 @@
 }
 
 .op-permission-label {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     color: var(--color-text-muted);
     transition: color var(--transition-fast);
@@ -361,8 +339,6 @@
 .op-permission-item:has(.op-checkbox:checked) .op-permission-label {
     color: var(--color-text);
 }
-
-/* ── My positions list ───────────────────────────── */
 
 .op-positions-list {
     list-style: none;
@@ -385,14 +361,14 @@
 }
 
 .op-position-title {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     font-weight: 600;
     color: var(--color-text);
 }
 
 .op-position-code {
-    font-family: var(--font-mono);
+    font-family: var(--font-mono), serif;
     font-size: 11px;
     color: var(--color-accent-light);
     background: var(--color-accent-glow);
@@ -403,7 +379,7 @@
 }
 
 .op-empty {
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 13px;
     font-style: italic;
     color: var(--color-text-muted);
@@ -469,7 +445,7 @@
 }
 
 .op-company-logo-hint-name {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 12px;
     color: var(--color-accent-light);
     overflow: hidden;
@@ -478,13 +454,13 @@
 }
 
 .op-company-logo-hint span:not(.op-company-logo-hint-name) {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 12px;
     color: var(--color-text-muted);
 }
 
 .op-company-logo-hint-sub {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     color: var(--color-text-faint) !important;
 }

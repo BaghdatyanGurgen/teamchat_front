@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { messageApi } from '../api/message';
-import { getHubConnection } from '../api/signalRClient';
-import type { MessageResponseDto } from '../types/api';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {messageApi} from '../api';
+import {getHubConnection} from '../api/signalRClient';
+import type {MessageResponseDto} from '../types/api';
 import * as signalR from '@microsoft/signalr';
-import { useAuth } from '../store/auth';
-import { resolveAvatarUrl } from '../utils/avatarUrl';
+import {useAuth} from '../store/auth';
+import {resolveAvatarUrl} from '../utils/avatarUrl';
 
 export interface ChatMessageViewModel {
     id: string;
@@ -40,7 +40,7 @@ export function useChatMessages(chatId: string) {
     const [isSending, setIsSending] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const { currentUser } = useAuth();
+    const {currentUser} = useAuth();
     const currentUserId = currentUser?.id;
     const currentUserAvatarUrl = currentUser?.avatarUrl;
     const joinedChatId = useRef<string | null>(null);
@@ -53,7 +53,11 @@ export function useChatMessages(chatId: string) {
     }, [currentUserId, currentUserAvatarUrl]);
 
     const loadMessages = useCallback(async () => {
-        if (!chatId) { setMessages([]); setErrorMessage('Invalid chat context.'); return; }
+        if (!chatId) {
+            setMessages([]);
+            setErrorMessage('Invalid chat context.');
+            return;
+        }
         setIsLoading(true);
         setErrorMessage(null);
         try {
@@ -96,7 +100,7 @@ export function useChatMessages(chatId: string) {
 
         const handleMessageEdited = (message: MessageResponseDto) => {
             setMessages((prev) =>
-                prev.map((m) => m.id === message.id ? { ...m, content: message.content, editedAt: message.editedAt } : m)
+                prev.map((m) => m.id === message.id ? {...m, content: message.content, editedAt: message.editedAt} : m)
             );
         };
 
@@ -122,7 +126,7 @@ export function useChatMessages(chatId: string) {
         setIsSending(true);
         setErrorMessage(null);
         try {
-            await messageApi.send({ chatId, content: trimmedContent });
+            await messageApi.send({chatId, content: trimmedContent});
         } catch (error) {
             setErrorMessage(getErrorMessage(error, 'Failed to send message.'));
         } finally {
@@ -151,5 +155,5 @@ export function useChatMessages(chatId: string) {
         if (chatId) void messageApi.markAllAsRead(chatId).catch(() => undefined);
     }, [loadMessages, chatId]);
 
-    return { messages, isLoading, errorMessage, isSending, sendMessage, editMessage, deleteMessage };
+    return {messages, isLoading, errorMessage, isSending, sendMessage, editMessage, deleteMessage};
 }

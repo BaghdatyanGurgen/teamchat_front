@@ -1,7 +1,3 @@
-/* lobbyPage.css — uses tokens from tokens.css */
-
-/* ── Root ────────────────────────────────────────── */
-
 .lobby-root {
     min-height: 100vh;
     background: var(--color-bg);
@@ -16,8 +12,6 @@
     opacity: 1;
     transform: translateY(0);
 }
-
-/* ── Glows ───────────────────────────────────────── */
 
 .lobby-glow {
     position: fixed;
@@ -43,8 +37,6 @@
     background: radial-gradient(circle, rgba(91, 143, 255, 0.06) 0%, transparent 70%);
 }
 
-/* ── Inner ───────────────────────────────────────── */
-
 .lobby-inner {
     position: relative;
     z-index: 10;
@@ -56,8 +48,6 @@
     gap: 36px;
 }
 
-/* ── Header ──────────────────────────────────────── */
-
 .lobby-header {
     display: flex;
     align-items: flex-start;
@@ -66,7 +56,7 @@
 }
 
 .lobby-title {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 26px;
     font-weight: 700;
     color: var(--color-text);
@@ -76,14 +66,12 @@
 }
 
 .lobby-subtitle {
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     font-style: italic;
     color: var(--color-text-muted);
     margin: 0;
 }
-
-/* ── Section ─────────────────────────────────────── */
 
 .lobby-section {
     display: flex;
@@ -92,7 +80,7 @@
 }
 
 .lobby-section-title {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -101,14 +89,10 @@
     margin: 0;
 }
 
-/* ── Join form ───────────────────────────────────── */
-
 .lobby-join-form {
     display: flex;
     gap: 10px;
 }
-
-/* ── Input ───────────────────────────────────────── */
 
 .lobby-input {
     flex: 1;
@@ -117,7 +101,7 @@
     border-radius: var(--radius-md);
     padding: 10px var(--space-md);
     color: var(--color-text);
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     outline: none;
     transition: border-color var(--transition-mid), box-shadow var(--transition-mid);
@@ -134,8 +118,6 @@
     border-color: rgba(255, 107, 53, 0.45);
     box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.08);
 }
-
-/* ── Header actions ──────────────────────────────── */
 
 .lobby-header-actions {
     display: flex;
@@ -158,7 +140,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     font-weight: 700;
     color: #fff;
@@ -195,7 +177,6 @@
 }
 
 
-
 .lobby-btn-primary {
     display: inline-flex;
     align-items: center;
@@ -205,7 +186,7 @@
     color: #fff;
     border: none;
     border-radius: var(--radius-md);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -235,7 +216,7 @@
     color: var(--color-text);
     border: 1px solid var(--color-border-input);
     border-radius: var(--radius-md);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -262,7 +243,7 @@
     color: var(--color-text-muted);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -279,8 +260,6 @@
     cursor: not-allowed;
 }
 
-/* ── Spinner ─────────────────────────────────────── */
-
 .lobby-spinner {
     width: 13px;
     height: 13px;
@@ -292,10 +271,10 @@
 }
 
 @keyframes lobby-spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
-
-/* ── Error ───────────────────────────────────────── */
 
 .lobby-error {
     display: flex;
@@ -307,21 +286,17 @@
     border-radius: var(--radius-md);
     color: var(--color-error-text);
     font-size: 13px;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
 }
-
-/* ── Info / empty ────────────────────────────────── */
 
 .lobby-info,
 .lobby-empty {
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     font-style: italic;
     color: var(--color-text-muted);
     margin: 0;
 }
-
-/* ── Company cards ───────────────────────────────── */
 
 .lobby-companies {
     display: flex;
@@ -360,7 +335,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-weight: 700;
     font-size: 16px;
     color: #fff;
@@ -380,7 +355,7 @@
 }
 
 .lobby-company-name {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 15px;
     font-weight: 600;
     color: var(--color-text);
@@ -389,7 +364,7 @@
 }
 
 .lobby-company-desc {
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 13px;
     color: var(--color-text-muted);
     margin: 0;
@@ -410,8 +385,6 @@
     transform: translateX(2px);
 }
 
-/* ── Modal backdrop ──────────────────────────────── */
-
 .lobby-backdrop {
     position: fixed;
     inset: 0;
@@ -426,11 +399,13 @@
 }
 
 @keyframes lobby-fade-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
-
-/* ── Modal ───────────────────────────────────────── */
 
 .lobby-modal {
     width: 100%;
@@ -446,8 +421,14 @@
 }
 
 @keyframes lobby-slide-up {
-    from { opacity: 0; transform: translateY(16px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .lobby-modal-header {
@@ -457,7 +438,7 @@
 }
 
 .lobby-modal-title {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 18px;
     font-weight: 700;
     color: var(--color-text);
@@ -492,7 +473,7 @@
 }
 
 .lobby-modal-label {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.09em;
@@ -506,8 +487,6 @@
     justify-content: flex-end;
     margin-top: var(--space-xs);
 }
-
-/* ── User button (avatar as clickable) ───────────── */
 
 .lobby-user-btn {
     background: transparent;
@@ -523,8 +502,6 @@
     transform: scale(1.05);
 }
 
-/* ── Success message ─────────────────────────────── */
-
 .lobby-success {
     display: flex;
     align-items: center;
@@ -535,10 +512,8 @@
     border-radius: var(--radius-md);
     color: var(--color-online);
     font-size: 13px;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
 }
-
-/* ── Profile avatar row ──────────────────────────── */
 
 .lobby-profile-avatar-row {
     display: flex;
@@ -574,7 +549,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 22px;
     font-weight: 700;
     color: #fff;
@@ -609,7 +584,7 @@
 }
 
 .lobby-profile-name {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 15px;
     font-weight: 600;
     color: var(--color-text);
@@ -618,7 +593,7 @@
 }
 
 .lobby-profile-email {
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 12px;
     color: var(--color-text-muted);
     margin: 0;
@@ -632,7 +607,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     color: var(--color-text-faint);
     margin: 2px 0 0;

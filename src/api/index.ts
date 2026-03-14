@@ -3,4 +3,4 @@ export * from './auth';
 export * from './chat';
 export * from './company';
 export * from './message';
-export type { LoginRequestDto, UserProfileResponseDto as UserDto } from '../types/api';
+export type {LoginRequestDto} from '../types/api';

@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-
-import { chatApi } from '../api/chat';
+import { chatApi } from '../api';
 import type { CompanyChatResponseDto } from '../types/api';
 
 function getErrorMessage(error: unknown, fallback: string): string {

@@ -1,6 +1,3 @@
-/* loginPage.css — uses tokens from tokens.css */
-
-/* ── Root / backdrop ─────────────────────────────── */
 .login-root {
     min-height: 100vh;
     display: flex;
@@ -21,7 +18,6 @@
     transform: translateY(0);
 }
 
-/* ── Ambient glows ───────────────────────────────── */
 .login-glow {
     position: absolute;
     border-radius: 50%;
@@ -45,7 +41,6 @@
     background: radial-gradient(circle, rgba(91, 143, 255, 0.07) 0%, transparent 70%);
 }
 
-/* ── Card ────────────────────────────────────────── */
 .login-card {
     position: relative;
     z-index: 10;
@@ -61,7 +56,6 @@
     backdrop-filter: blur(12px);
 }
 
-/* ── Logo ────────────────────────────────────────── */
 .login-logo {
     display: flex;
     align-items: center;
@@ -73,7 +67,6 @@
     border: 1px solid var(--color-border);
 }
 
-/* ── Heading ─────────────────────────────────────── */
 .login-heading {
     display: flex;
     flex-direction: column;
@@ -81,7 +74,7 @@
 }
 
 .login-title {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 24px;
     font-weight: 700;
     color: var(--color-text);
@@ -90,14 +83,13 @@
 }
 
 .login-subtitle {
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     font-style: italic;
     color: var(--color-text-muted);
     line-height: 1.4;
 }
 
-/* ── Form ────────────────────────────────────────── */
 .login-form {
     display: flex;
     flex-direction: column;
@@ -111,7 +103,7 @@
 }
 
 .login-label {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.09em;
@@ -125,7 +117,7 @@
     border-radius: var(--radius-md);
     padding: 11px var(--space-md);
     color: var(--color-text);
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     outline: none;
     transition: border-color var(--transition-mid), box-shadow var(--transition-mid);
@@ -143,7 +135,6 @@
     box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.08);
 }
 
-/* ── Error ───────────────────────────────────────── */
 .login-error {
     display: flex;
     align-items: center;
@@ -154,11 +145,10 @@
     border-radius: var(--radius-md);
     color: var(--color-error-text);
     font-size: 13px;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     letter-spacing: 0.01em;
 }
 
-/* ── Submit button ───────────────────────────────── */
 .login-btn {
     display: flex;
     align-items: center;
@@ -170,7 +160,7 @@
     border-radius: var(--radius-md);
     background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
     color: #fff;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -195,7 +185,6 @@
     box-shadow: none;
 }
 
-/* ── Spinner ─────────────────────────────────────── */
 .login-btn__spinner {
     width: 14px;
     height: 14px;
@@ -207,12 +196,13 @@
 }
 
 @keyframes login-spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-/* ── Footer link ─────────────────────────────────── */
 .login-footer {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     color: var(--color-text-muted);
     text-align: center;

@@ -9,7 +9,7 @@
 .chat-info {
     padding: 12px;
     color: var(--color-text-muted);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
 }
 
@@ -21,7 +21,7 @@
     border-radius: var(--radius-md);
     color: var(--color-error-text);
     font-size: 13px;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
 }
 
 /* MESSAGES CONTAINER */
@@ -38,8 +38,14 @@
     scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
 }
 
-.chat-messages::-webkit-scrollbar       { width: 4px; }
-.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 .chat-messages::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.08);
     border-radius: 2px;
@@ -54,8 +60,14 @@
 }
 
 @keyframes msgIn {
-    from { opacity: 0; transform: translateY(8px) scale(0.98); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* AVATAR */
@@ -69,7 +81,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-weight: 600;
     font-size: 13px;
     flex-shrink: 0;
@@ -101,7 +113,7 @@
 }
 
 .chat-author {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.01em;
@@ -109,7 +121,7 @@
 }
 
 .chat-time {
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 11px;
     color: var(--color-text-muted);
     letter-spacing: 0.04em;
@@ -118,7 +130,7 @@
 /* TEXT */
 
 .chat-text {
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     line-height: 1.55;
     color: var(--color-text-bubble-other);
@@ -143,7 +155,7 @@
     border: 1px solid var(--color-border-input);
     background: var(--color-surface);
     color: var(--color-text);
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     outline: none;
     transition: border-color var(--transition-mid), box-shadow var(--transition-mid);
@@ -168,7 +180,7 @@
     color: #fff;
     border: none;
     border-radius: var(--radius-md);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -218,6 +230,7 @@
 .chat-message--own .chat-avatar {
     background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent));
 }
+
 .chat-edited {
     font-size: 10px;
     color: var(--color-text-faint);
@@ -277,7 +290,7 @@
     border-radius: var(--radius-md);
     padding: 8px var(--space-md);
     color: var(--color-text);
-    font-family: var(--font-text);
+    font-family: var(--font-text), serif;
     font-size: 14px;
     line-height: 1.5;
     outline: none;
@@ -295,7 +308,7 @@
 .chat-edit-btn {
     padding: 4px 12px;
     border-radius: var(--radius-sm);
-    font-family: var(--font-ui);
+    font-family: var(--font-ui), serif;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;

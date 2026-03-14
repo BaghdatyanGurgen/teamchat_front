@@ -1,4 +1,4 @@
-import type { CompanyChatResponseDto } from '../types/api';
+import type {CompanyChatResponseDto} from '../types/api';
 import '../styles/companyChatList.css';
 
 interface CompanyChatListProps {
@@ -10,7 +10,14 @@ interface CompanyChatListProps {
     unreadCounts?: Record<string, number>;
 }
 
-export function CompanyChatList({ chats, isLoading, errorMessage, selectedChatId, onSelectChat, unreadCounts = {} }: CompanyChatListProps) {
+export function CompanyChatList({
+                                    chats,
+                                    isLoading,
+                                    errorMessage,
+                                    selectedChatId,
+                                    onSelectChat,
+                                    unreadCounts = {}
+                                }: CompanyChatListProps) {
     return (
         <div className="company-chat-list-root">
             {isLoading && <p className="sidebar-info">Loading chats...</p>}

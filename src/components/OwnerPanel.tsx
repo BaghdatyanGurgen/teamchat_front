@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
-
-import type { OwnerPanelTab } from '../hooks/useOwnerPanel';
-import type { CompanyChatResponseDto, UserPositionResponseDto } from '../types/api';
-import { CreateDepartmentForm } from './CreateDepartmentForm';
-import { CreatePositionForm } from './CreatePositionForm';
-import { CreateChatForm } from './CreateChatForm';
-import { CompanySettingsForm } from './CompanySettingsForm';
+import {useMemo} from 'react';
+import type {OwnerPanelTab} from '../hooks/useOwnerPanel';
+import type {CompanyChatResponseDto, UserPositionResponseDto} from '../types/api';
+import {CreateDepartmentForm} from './CreateDepartmentForm';
+import {CreatePositionForm} from './CreatePositionForm';
+import {CreateChatForm} from './CreateChatForm';
+import {CompanySettingsForm} from './CompanySettingsForm';
 import '../styles/ownerPanel.css';
 
 interface OwnerPanelProps {
@@ -73,7 +72,8 @@ export function OwnerPanel({
         >
             {label}
             <svg className="op-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                      strokeLinejoin="round"/>
             </svg>
         </button>
     );
@@ -91,13 +91,14 @@ export function OwnerPanel({
                     <h2>Owner Panel</h2>
                     <button type="button" onClick={onClose} aria-label="Close">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                            <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.5"
+                                  strokeLinecap="round"/>
                         </svg>
                     </button>
                 </div>
 
                 <div className="op-nav">
-                    <NavBtn section="companySettings" label="Company Settings" />
+                    <NavBtn section="companySettings" label="Company Settings"/>
                     {isCompanySettingsOpen && (
                         <CompanySettingsForm
                             companyId={companyId}
@@ -107,12 +108,12 @@ export function OwnerPanel({
                         />
                     )}
 
-                    <NavBtn section="createChat" label="Create Chat" disabled={!canCreateChat} />
+                    <NavBtn section="createChat" label="Create Chat" disabled={!canCreateChat}/>
                     {isCreateChatOpen && (
-                        <CreateChatForm companyId={companyId} onCreated={onChatCreated} />
+                        <CreateChatForm companyId={companyId} onCreated={onChatCreated}/>
                     )}
 
-                    <NavBtn section="department" label="Create Department" disabled={!canCreateDepartment} />
+                    <NavBtn section="department" label="Create Department" disabled={!canCreateDepartment}/>
                     {isDepartmentOpen && (
                         <CreateDepartmentForm
                             companyId={companyId}
@@ -121,12 +122,12 @@ export function OwnerPanel({
                         />
                     )}
 
-                    <NavBtn section="position" label="Create Position" disabled={!canCreatePosition} />
+                    <NavBtn section="position" label="Create Position" disabled={!canCreatePosition}/>
                     {isPositionOpen && (
-                        <CreatePositionForm companyId={companyId} titleInputId={positionTitleInputId} />
+                        <CreatePositionForm companyId={companyId} titleInputId={positionTitleInputId}/>
                     )}
 
-                    <NavBtn section="myPositions" label="My Positions" />
+                    <NavBtn section="myPositions" label="My Positions"/>
                     {isMyPositionsOpen && (
                         <section id="owner-panel-my-positions" className="op-section">
                             {isPositionsLoading && <p className="op-empty">Loading…</p>}
@@ -134,9 +135,10 @@ export function OwnerPanel({
                             {!isPositionsLoading && positionsErrorMessage && (
                                 <div className="op-error">
                                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                                        <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
-                                        <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                        <circle cx="7" cy="10" r="0.75" fill="currentColor" />
+                                        <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                                        <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5"
+                                              strokeLinecap="round"/>
+                                        <circle cx="7" cy="10" r="0.75" fill="currentColor"/>
                                     </svg>
                                     {positionsErrorMessage}
                                 </div>

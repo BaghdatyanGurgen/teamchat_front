@@ -1,6 +1,5 @@
 import {create} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
-
 import {authApi} from '../api';
 import {setUnauthorizedHandler} from '../api';
 import type {LoginRequestDto, UserProfileResponseDto} from '../types/api';
@@ -73,9 +72,6 @@ export const useAuthStore = create<AuthState>()(
                     const response = await authApi.login(payload);
                     const authData = response.Data ?? response.data;
 
-                    console.log("LOGIN RESPONSE:", authData);
-                    console.log("PROFILE OBJECT:", authData?.profile);
-                    console.log("PROFILE ID:", authData?.profile?.id);
 
                     if (!isResponseSuccess(response) || !authData) {
                         throw new Error(response.Message ?? response.message ?? 'Login failed');

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { companyApi } from '../api/company';
+import { companyApi } from '../api';
 import type { UserPositionResponseDto } from '../types/api';
 
 function getErrorMessage(error: unknown, fallback: string): string {

@@ -1,6 +1,6 @@
-import { useState, useRef, type FormEvent, type ChangeEvent } from 'react';
-import { companyApi } from '../api/company';
-import { resolveAvatarUrl } from '../utils/avatarUrl';
+import {useState, useRef, type FormEvent, type ChangeEvent} from 'react';
+import {companyApi} from '../api';
+import {resolveAvatarUrl} from '../utils/avatarUrl';
 import '../styles/ownerPanel.css';
 
 interface CompanySettingsFormProps {
@@ -34,7 +34,10 @@ export function CompanySettingsForm({
     const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        if (file.size > 5 * 1024 * 1024) { setErrorMessage('Image must be under 5 MB.'); return; }
+        if (file.size > 5 * 1024 * 1024) {
+            setErrorMessage('Image must be under 5 MB.');
+            return;
+        }
         setLogoFile(file);
         const reader = new FileReader();
         reader.onload = (ev) => setLogoPreview(ev.target?.result as string);
@@ -74,12 +77,13 @@ export function CompanySettingsForm({
                 <div className="op-company-logo-row">
                     <label className="op-company-logo-upload" htmlFor="company-logo-input" title="Change logo">
                         {logoPreview || resolvedLogo
-                            ? <img src={logoPreview ?? resolvedLogo} alt="Logo" className="op-company-logo-img" />
+                            ? <img src={logoPreview ?? resolvedLogo} alt="Logo" className="op-company-logo-img"/>
                             : <span className="op-company-logo-placeholder">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.5"/>
                     <circle cx="7.5" cy="9" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
-                    <path d="M2 14l4-3 3 2.5 3-3 4 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2 14l4-3 3 2.5 3-3 4 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                          strokeLinejoin="round"/>
                   </svg>
                 </span>
                         }
@@ -93,7 +97,7 @@ export function CompanySettingsForm({
                             ref={fileInputRef}
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
-                            style={{ display: 'none' }}
+                            style={{display: 'none'}}
                             onChange={handleLogoChange}
                         />
                     </label>
@@ -121,9 +125,9 @@ export function CompanySettingsForm({
                 {errorMessage ? (
                     <div className="op-error" role="alert" aria-live="assertive">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                            <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
-                            <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                            <circle cx="7" cy="10" r="0.75" fill="currentColor" />
+                            <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                            <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                            <circle cx="7" cy="10" r="0.75" fill="currentColor"/>
                         </svg>
                         {errorMessage}
                     </div>
@@ -132,15 +136,16 @@ export function CompanySettingsForm({
                 {successMessage ? (
                     <div className="op-success" role="status" aria-live="polite">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                            <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
-                            <path d="M4.5 7l2 2 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                            <path d="M4.5 7l2 2 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                                  strokeLinejoin="round"/>
                         </svg>
                         {successMessage}
                     </div>
                 ) : null}
 
                 <button className="op-btn" type="submit" disabled={isSaving}>
-                    {isSaving ? <span className="op-spinner" aria-hidden="true" /> : null}
+                    {isSaving ? <span className="op-spinner" aria-hidden="true"/> : null}
                     {isSaving ? 'Saving…' : 'Save changes'}
                 </button>
             </form>

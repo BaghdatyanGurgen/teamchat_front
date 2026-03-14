@@ -1,24 +1,22 @@
-import { useMemo, useState, useEffect } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-
-import { CompanyChatList } from '../components/CompanyChatList';
-import { CompanyChat } from '../components/CompanyChat';
-import { OwnerPanel } from '../components/OwnerPanel';
-import { useAuth } from '../store/auth';
-import { useCompanyChats } from '../hooks/useCompanyChats';
-import { useCompanyPermissions } from '../hooks/useCompanyPermissions';
-import { useOwnerPanel } from '../hooks/useOwnerPanel';
-import { useUserPositions } from '../hooks/useUserPositions';
-import { authApi } from '../api';
-import type { CompanyChatResponseDto, CompanyResponseDto } from '../types/api';
-
-import { useUnreadCounts } from '../hooks/useUnreadCounts';
+import {useMemo, useState, useEffect} from 'react';
+import {Navigate, useNavigate, useParams} from 'react-router-dom';
+import {CompanyChatList} from '../components/CompanyChatList';
+import {CompanyChat} from '../components/CompanyChat';
+import {OwnerPanel} from '../components/OwnerPanel';
+import {useAuth} from '../store/auth';
+import {useCompanyChats} from '../hooks/useCompanyChats';
+import {useCompanyPermissions} from '../hooks/useCompanyPermissions';
+import {useOwnerPanel} from '../hooks/useOwnerPanel';
+import {useUserPositions} from '../hooks/useUserPositions';
+import {authApi} from '../api';
+import type {CompanyChatResponseDto, CompanyResponseDto} from '../types/api';
+import {useUnreadCounts} from '../hooks/useUnreadCounts';
 import '../styles/companyLobby.css';
 
 export function CompanyLobbyPage() {
     const navigate = useNavigate();
-    const { isAuthenticated } = useAuth();
-    const { companyId: companyIdParam } = useParams<{ companyId: string }>();
+    const {isAuthenticated} = useAuth();
+    const {companyId: companyIdParam} = useParams<{ companyId: string }>();
     const companyId = useMemo(() => Number(companyIdParam), [companyIdParam]);
 
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -33,18 +31,18 @@ export function CompanyLobbyPage() {
         });
     }, [companyId]);
 
-    const { chats, isLoading: isChatsLoading, errorMessage: chatsErrorMessage, addChat } =
+    const {chats, isLoading: isChatsLoading, errorMessage: chatsErrorMessage, addChat} =
         useCompanyChats(companyId);
 
-    const { canCreateDepartment, canCreatePosition, canCreateChat } =
+    const {canCreateDepartment, canCreatePosition, canCreateChat} =
         useCompanyPermissions(companyId);
 
-    const { positions, isLoading: isPositionsLoading, errorMessage: positionsErrorMessage } =
+    const {positions, isLoading: isPositionsLoading, errorMessage: positionsErrorMessage} =
         useUserPositions(companyId);
 
-    const { unreadCounts, markAsRead } = useUnreadCounts(companyId);
+    const {unreadCounts, markAsRead} = useUnreadCounts(companyId);
 
-    const { isOwnerPanelOpen, ownerPanelTab, openOwnerPanel, closeOwnerPanel, toggleOwnerPanelSection } =
+    const {isOwnerPanelOpen, ownerPanelTab, openOwnerPanel, closeOwnerPanel, toggleOwnerPanelSection} =
         useOwnerPanel();
 
     const canAccessOwnerPanel = useMemo(
@@ -66,10 +64,10 @@ export function CompanyLobbyPage() {
     };
 
     const handleCompanyUpdated = (description: string, logoUrl?: string) => {
-        setCompany((prev) => prev ? { ...prev, description, logoUrl: logoUrl ?? prev.logoUrl } : prev);
+        setCompany((prev) => prev ? {...prev, description, logoUrl: logoUrl ?? prev.logoUrl} : prev);
     };
 
-    if (!isAuthenticated) return <Navigate to="/login" replace />;
+    if (!isAuthenticated) return <Navigate to="/login" replace/>;
 
     return (
         <main className="company-layout">
@@ -77,7 +75,8 @@ export function CompanyLobbyPage() {
             <aside className="chat-sidebar">
                 <button className="sidebar-back-btn" type="button" onClick={() => navigate('/lobby')}>
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                        <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                              strokeLinejoin="round"/>
                     </svg>
                     Lobby
                 </button>
@@ -107,7 +106,7 @@ export function CompanyLobbyPage() {
 
                 <div className="chat-container">
                     {selectedChat ? (
-                        <CompanyChat companyId={companyId} chatId={selectedChat.id} />
+                        <CompanyChat companyId={companyId} chatId={selectedChat.id}/>
                     ) : (
                         <div className="chat-placeholder">
                             Select a chat to start messaging
