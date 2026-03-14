@@ -6,6 +6,7 @@ import type {
   CreateCompanyPositionRequestDto,
   CreateCompanyPositionResponseDto,
   ResponseModel,
+  SetCompanyDetailsResponseDto,
   UserPositionResponseDto,
 } from '../types/api';
 
@@ -35,4 +36,19 @@ export const companyApi = {
       httpClient
           .get<ResponseModel<UserPositionResponseDto[]>>(`/company/${companyId}/positions/user`)
           .then((response) => response.data),
+
+  setCompanyDetails: (
+      companyId: number,
+      description: string,
+      logoFile?: File,
+  ): Promise<ResponseModel<SetCompanyDetailsResponseDto>> => {
+    const formData = new FormData();
+    formData.append('description', description);
+    if (logoFile) formData.append('logoFile', logoFile);
+    return httpClient
+        .patch<ResponseModel<SetCompanyDetailsResponseDto>>(`/company/${companyId}/set-details`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((response) => response.data);
+  },
 };

@@ -181,6 +181,13 @@ export interface CreateCompanyPositionResponseDto {
   permissions: number;
 }
 
+export interface SetCompanyDetailsResponseDto {
+  id: number;
+  name: string;
+  description: string;
+  logoUrl?: string;
+}
+
 export interface UserPositionResponseDto {
   id: number;
   title: string;

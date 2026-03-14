@@ -5,10 +5,7 @@ import type { CompanyUserResponseDto } from '../types/api';
 import { PositionPermissions } from '../types/api';
 
 function getErrorMessage(error: unknown, fallback: string): string {
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-
+  if (error instanceof Error && error.message) return error.message;
   return fallback;
 }
 
@@ -34,56 +31,44 @@ export function useCompanyPermissions(companyId: number) {
     setErrorMessage(null);
 
     void companyApi
-      .getMyCompanyUser(companyId)
-      .then((response) => {
-        if (!isMounted) {
-          return;
-        }
-
-        const isSuccess = response.IsSuccess ?? response.isSuccess ?? false;
-        const data = response.Data ?? response.data;
-        if (!isSuccess || !data) {
+        .getMyCompanyUser(companyId)
+        .then((response) => {
+          if (!isMounted) return;
+          const isSuccess = response.IsSuccess ?? response.isSuccess ?? false;
+          const data = response.Data ?? response.data;
+          if (!isSuccess || !data) {
+            setCompanyUser(null);
+            setErrorMessage(response.Message ?? response.message ?? 'Failed to load user permissions.');
+            return;
+          }
+          setCompanyUser(data);
+        })
+        .catch((error) => {
+          if (!isMounted) return;
           setCompanyUser(null);
-          setErrorMessage(response.Message ?? response.message ?? 'Failed to load user permissions.');
-          return;
-        }
+          setErrorMessage(getErrorMessage(error, 'Failed to load user permissions.'));
+        })
+        .finally(() => {
+          if (isMounted) setIsLoading(false);
+        });
 
-        setCompanyUser(data);
-      })
-      .catch((error) => {
-        if (!isMounted) {
-          return;
-        }
-
-        setCompanyUser(null);
-        setErrorMessage(getErrorMessage(error, 'Failed to load user permissions.'));
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [companyId]);
 
-  const canCreateDepartment = useMemo(() => {
-    if (!companyUser) {
-      return false;
-    }
+  const canCreateDepartment = useMemo(() =>
+          !!companyUser && hasPermission(companyUser.permissions, PositionPermissions.CreateDepartment),
+      [companyUser]
+  );
 
-    return hasPermission(companyUser.permissions, PositionPermissions.CreateDepartment);
-  }, [companyUser]);
+  const canCreatePosition = useMemo(() =>
+          !!companyUser && hasPermission(companyUser.permissions, PositionPermissions.CreatePosition),
+      [companyUser]
+  );
 
-  const canCreatePosition = useMemo(() => {
-    if (!companyUser) {
-      return false;
-    }
+  const canCreateChat = useMemo(() =>
+          !!companyUser && hasPermission(companyUser.permissions, PositionPermissions.CreateChat),
+      [companyUser]
+  );
 
-    return hasPermission(companyUser.permissions, PositionPermissions.CreatePosition);
-  }, [companyUser]);
-
-  return { companyUser, canCreateDepartment, canCreatePosition, isLoading, errorMessage };
+  return { companyUser, canCreateDepartment, canCreatePosition, canCreateChat, isLoading, errorMessage };
 }

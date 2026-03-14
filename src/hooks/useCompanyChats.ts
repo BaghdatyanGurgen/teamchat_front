@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import { chatApi } from '../api/chat';
 import type { CompanyChatResponseDto } from '../types/api';
 
 function getErrorMessage(error: unknown, fallback: string): string {
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-
+  if (error instanceof Error && error.message) return error.message;
   return fallback;
 }
 
@@ -29,39 +26,32 @@ export function useCompanyChats(companyId: number) {
     setErrorMessage(null);
 
     void chatApi
-      .getCompanyChats(companyId)
-      .then((response) => {
-        if (!isMounted) {
-          return;
-        }
-
-        const isSuccess = response.IsSuccess ?? response.isSuccess ?? false;
-        if (!isSuccess) {
+        .getCompanyChats(companyId)
+        .then((response) => {
+          if (!isMounted) return;
+          const isSuccess = response.IsSuccess ?? response.isSuccess ?? false;
+          if (!isSuccess) {
+            setChats([]);
+            setErrorMessage(response.Message ?? response.message ?? 'Failed to load chats.');
+            return;
+          }
+          setChats(response.Data ?? response.data ?? []);
+        })
+        .catch((error) => {
+          if (!isMounted) return;
           setChats([]);
-          setErrorMessage(response.Message ?? response.message ?? 'Failed to load chats.');
-          return;
-        }
+          setErrorMessage(getErrorMessage(error, 'Failed to load chats.'));
+        })
+        .finally(() => {
+          if (isMounted) setIsLoading(false);
+        });
 
-        setChats(response.Data ?? response.data ?? []);
-      })
-      .catch((error) => {
-        if (!isMounted) {
-          return;
-        }
-
-        setChats([]);
-        setErrorMessage(getErrorMessage(error, 'Failed to load chats.'));
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [companyId]);
 
-  return { chats, isLoading, errorMessage };
+  const addChat = useCallback((chat: CompanyChatResponseDto) => {
+    setChats((prev) => prev.some((c) => c.id === chat.id) ? prev : [...prev, chat]);
+  }, []);
+
+  return { chats, isLoading, errorMessage, addChat };
 }

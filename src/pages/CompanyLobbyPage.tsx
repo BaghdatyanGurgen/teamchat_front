@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { CompanyChatList } from '../components/CompanyChatList';
@@ -9,6 +9,8 @@ import { useCompanyChats } from '../hooks/useCompanyChats';
 import { useCompanyPermissions } from '../hooks/useCompanyPermissions';
 import { useOwnerPanel } from '../hooks/useOwnerPanel';
 import { useUserPositions } from '../hooks/useUserPositions';
+import { authApi } from '../api';
+import type { CompanyChatResponseDto, CompanyResponseDto } from '../types/api';
 
 import '../styles/companyLobby.css';
 
@@ -19,11 +21,21 @@ export function CompanyLobbyPage() {
     const companyId = useMemo(() => Number(companyIdParam), [companyIdParam]);
 
     const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+    const [company, setCompany] = useState<CompanyResponseDto | null>(null);
 
-    const { chats, isLoading: isChatsLoading, errorMessage: chatsErrorMessage } =
+    useEffect(() => {
+        if (!Number.isFinite(companyId) || companyId <= 0) return;
+        void authApi.getMyCompanies().then((response) => {
+            const companies = response.Data ?? response.data ?? [];
+            const found = companies.find((c) => c.id === companyId);
+            if (found) setCompany(found);
+        });
+    }, [companyId]);
+
+    const { chats, isLoading: isChatsLoading, errorMessage: chatsErrorMessage, addChat } =
         useCompanyChats(companyId);
 
-    const { canCreateDepartment, canCreatePosition } =
+    const { canCreateDepartment, canCreatePosition, canCreateChat } =
         useCompanyPermissions(companyId);
 
     const { positions, isLoading: isPositionsLoading, errorMessage: positionsErrorMessage } =
@@ -33,11 +45,21 @@ export function CompanyLobbyPage() {
         useOwnerPanel();
 
     const canAccessOwnerPanel = useMemo(
-        () => canCreateDepartment || canCreatePosition,
-        [canCreateDepartment, canCreatePosition]
+        () => canCreateDepartment || canCreatePosition || canCreateChat,
+        [canCreateDepartment, canCreatePosition, canCreateChat]
     );
 
     const selectedChat = chats.find((chat) => chat.id === selectedChatId) ?? null;
+
+    const handleChatCreated = (chat: CompanyChatResponseDto) => {
+        addChat(chat);
+        setSelectedChatId(chat.id);
+        closeOwnerPanel();
+    };
+
+    const handleCompanyUpdated = (description: string, logoUrl?: string) => {
+        setCompany((prev) => prev ? { ...prev, description, logoUrl: logoUrl ?? prev.logoUrl } : prev);
+    };
 
     if (!isAuthenticated) return <Navigate to="/login" replace />;
 
@@ -45,7 +67,6 @@ export function CompanyLobbyPage() {
         <main className="company-layout">
 
             <aside className="chat-sidebar">
-                {/* Back to lobby */}
                 <button className="sidebar-back-btn" type="button" onClick={() => navigate('/lobby')}>
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                         <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -65,7 +86,6 @@ export function CompanyLobbyPage() {
             </aside>
 
             <section className="chat-main">
-
                 <div className="chat-topbar">
                     <h2>{selectedChat ? selectedChat.name : 'Select chat'}</h2>
 
@@ -85,7 +105,6 @@ export function CompanyLobbyPage() {
                         </div>
                     )}
                 </div>
-
             </section>
 
             {canAccessOwnerPanel && (
@@ -95,11 +114,16 @@ export function CompanyLobbyPage() {
                     onClose={closeOwnerPanel}
                     canCreateDepartment={canCreateDepartment}
                     canCreatePosition={canCreatePosition}
+                    canCreateChat={canCreateChat}
                     ownerPanelTab={ownerPanelTab}
                     toggleOwnerPanelSection={toggleOwnerPanelSection}
                     positions={positions}
                     isPositionsLoading={isPositionsLoading}
                     positionsErrorMessage={positionsErrorMessage}
+                    onChatCreated={handleChatCreated}
+                    companyDescription={company?.description}
+                    companyLogoUrl={company?.logoUrl}
+                    onCompanyUpdated={handleCompanyUpdated}
                 />
             )}
         </main>

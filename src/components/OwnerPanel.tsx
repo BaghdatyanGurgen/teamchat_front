@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 
 import type { OwnerPanelTab } from '../hooks/useOwnerPanel';
-import type { UserPositionResponseDto } from '../types/api';
+import type { CompanyChatResponseDto, UserPositionResponseDto } from '../types/api';
 import { CreateDepartmentForm } from './CreateDepartmentForm';
 import { CreatePositionForm } from './CreatePositionForm';
+import { CreateChatForm } from './CreateChatForm';
+import { CompanySettingsForm } from './CompanySettingsForm';
 import '../styles/ownerPanel.css';
 
 interface OwnerPanelProps {
@@ -12,11 +14,16 @@ interface OwnerPanelProps {
     onClose: () => void;
     canCreateDepartment: boolean;
     canCreatePosition: boolean;
+    canCreateChat: boolean;
     ownerPanelTab: OwnerPanelTab;
     toggleOwnerPanelSection: (section: Exclude<OwnerPanelTab, 'none'>) => void;
     positions: UserPositionResponseDto[];
     isPositionsLoading: boolean;
     positionsErrorMessage: string | null;
+    onChatCreated: (chat: CompanyChatResponseDto) => void;
+    companyDescription?: string;
+    companyLogoUrl?: string;
+    onCompanyUpdated: (description: string, logoUrl?: string) => void;
 }
 
 export function OwnerPanel({
@@ -25,21 +32,51 @@ export function OwnerPanel({
                                onClose,
                                canCreateDepartment,
                                canCreatePosition,
+                               canCreateChat,
                                ownerPanelTab,
                                toggleOwnerPanelSection,
                                positions,
                                isPositionsLoading,
                                positionsErrorMessage,
+                               onChatCreated,
+                               companyDescription,
+                               companyLogoUrl,
+                               onCompanyUpdated,
                            }: OwnerPanelProps) {
     const isDepartmentOpen = ownerPanelTab === 'department';
     const isPositionOpen = ownerPanelTab === 'position';
     const isMyPositionsOpen = ownerPanelTab === 'myPositions';
+    const isCreateChatOpen = ownerPanelTab === 'createChat';
+    const isCompanySettingsOpen = ownerPanelTab === 'companySettings';
 
     const departmentNameInputId = useMemo(() => `department-name-${companyId}`, [companyId]);
     const departmentDescriptionInputId = useMemo(() => `department-description-${companyId}`, [companyId]);
     const positionTitleInputId = useMemo(() => `position-title-${companyId}`, [companyId]);
 
     if (!isOpen) return null;
+
+    const NavBtn = ({
+                        section,
+                        label,
+                        disabled = false,
+                    }: {
+        section: Exclude<OwnerPanelTab, 'none'>;
+        label: string;
+        disabled?: boolean;
+    }) => (
+        <button
+            type="button"
+            className="op-nav-btn"
+            onClick={() => toggleOwnerPanelSection(section)}
+            disabled={disabled}
+            aria-expanded={ownerPanelTab === section}
+        >
+            {label}
+            <svg className="op-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+        </button>
+    );
 
     return (
         <div className="company-owner-panel-backdrop" onClick={onClose} role="presentation">
@@ -50,7 +87,6 @@ export function OwnerPanel({
                 aria-label="Owner Panel"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Header */}
                 <div className="company-owner-panel-header">
                     <h2>Owner Panel</h2>
                     <button type="button" onClick={onClose} aria-label="Close">
@@ -60,22 +96,23 @@ export function OwnerPanel({
                     </button>
                 </div>
 
-                {/* Nav */}
                 <div className="op-nav">
-                    <button
-                        type="button"
-                        className="op-nav-btn"
-                        onClick={() => toggleOwnerPanelSection('department')}
-                        disabled={!canCreateDepartment}
-                        aria-expanded={isDepartmentOpen}
-                        aria-controls="owner-panel-department"
-                    >
-                        Create Department
-                        <svg className="op-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
+                    <NavBtn section="companySettings" label="Company Settings" />
+                    {isCompanySettingsOpen && (
+                        <CompanySettingsForm
+                            companyId={companyId}
+                            currentDescription={companyDescription}
+                            currentLogoUrl={companyLogoUrl}
+                            onUpdated={onCompanyUpdated}
+                        />
+                    )}
 
+                    <NavBtn section="createChat" label="Create Chat" disabled={!canCreateChat} />
+                    {isCreateChatOpen && (
+                        <CreateChatForm companyId={companyId} onCreated={onChatCreated} />
+                    )}
+
+                    <NavBtn section="department" label="Create Department" disabled={!canCreateDepartment} />
                     {isDepartmentOpen && (
                         <CreateDepartmentForm
                             companyId={companyId}
@@ -84,37 +121,12 @@ export function OwnerPanel({
                         />
                     )}
 
-                    <button
-                        type="button"
-                        className="op-nav-btn"
-                        onClick={() => toggleOwnerPanelSection('position')}
-                        disabled={!canCreatePosition}
-                        aria-expanded={isPositionOpen}
-                        aria-controls="owner-panel-position"
-                    >
-                        Create Position
-                        <svg className="op-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
-
+                    <NavBtn section="position" label="Create Position" disabled={!canCreatePosition} />
                     {isPositionOpen && (
                         <CreatePositionForm companyId={companyId} titleInputId={positionTitleInputId} />
                     )}
 
-                    <button
-                        type="button"
-                        className="op-nav-btn"
-                        onClick={() => toggleOwnerPanelSection('myPositions')}
-                        aria-expanded={isMyPositionsOpen}
-                        aria-controls="owner-panel-my-positions"
-                    >
-                        My Positions
-                        <svg className="op-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </button>
-
+                    <NavBtn section="myPositions" label="My Positions" />
                     {isMyPositionsOpen && (
                         <section id="owner-panel-my-positions" className="op-section">
                             {isPositionsLoading && <p className="op-empty">Loading…</p>}
