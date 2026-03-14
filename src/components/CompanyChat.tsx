@@ -13,16 +13,14 @@ function formatTimestamp(value: string): string {
     if (Number.isNaN(date.getTime())) {
         return value;
     }
-
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export function CompanyChat({chatId }: CompanyChatProps) {
+export function CompanyChat({ chatId }: CompanyChatProps) {
     const { messages, isLoading, errorMessage, isSending, sendMessage } =
         useChatMessages(chatId);
 
     const [draftMessage, setDraftMessage] = useState('');
-
     const scrollAnchorRef = useRef<HTMLDivElement | null>(null);
 
     const isSubmitDisabled = useMemo(
@@ -36,10 +34,8 @@ export function CompanyChat({chatId }: CompanyChatProps) {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         const message = draftMessage.trim();
         if (!message) return;
-
         await sendMessage(message);
         setDraftMessage('');
     };
@@ -56,36 +52,34 @@ export function CompanyChat({chatId }: CompanyChatProps) {
             )}
 
             <div className="chat-messages">
-
                 {messages.map((message) => (
                     <article key={message.id} className={`chat-message${message.isOwn ? ' chat-message--own' : ''}`}>
 
                         <div className="chat-avatar">
-                            {message.authorName.charAt(0).toUpperCase()}
+                            {message.authorAvatarUrl
+                                ? <img
+                                    src={message.authorAvatarUrl}
+                                    alt={message.authorName}
+                                    className="chat-avatar-img"
+                                />
+                                : message.authorName.charAt(0).toUpperCase()
+                            }
                         </div>
 
                         <div className="chat-message-content">
-
                             <div className="chat-message-header">
                                 <span className="chat-author">{message.authorName}</span>
-                                <span className="chat-time">
-                    {formatTimestamp(message.createdAt)}
-                </span>
+                                <span className="chat-time">{formatTimestamp(message.createdAt)}</span>
                             </div>
-
                             <div className="chat-text">{message.content}</div>
-
                         </div>
 
                     </article>
                 ))}
-
                 <div ref={scrollAnchorRef} />
-
             </div>
 
             <form className="chat-input-form" onSubmit={handleSubmit}>
-
                 <input
                     className="chat-input"
                     id={`company-chat-message-${chatId}`}
@@ -93,15 +87,9 @@ export function CompanyChat({chatId }: CompanyChatProps) {
                     onChange={(event) => setDraftMessage(event.target.value)}
                     placeholder="Type a message..."
                 />
-
-                <button
-                    className="chat-send-button"
-                    type="submit"
-                    disabled={isSubmitDisabled}
-                >
+                <button className="chat-send-button" type="submit" disabled={isSubmitDisabled}>
                     {isSending ? 'Sending...' : 'Send'}
                 </button>
-
             </form>
 
         </section>

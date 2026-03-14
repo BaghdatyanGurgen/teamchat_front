@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Lora:ital@0;1&display=swap');
 
 :root {
-  /* Colors */
   --color-bg:           #0E0E0F;
   --color-text:         #E8E4DC;
   --color-text-muted:   rgba(232, 228, 220, 0.4);
@@ -23,26 +22,22 @@
   --color-error-border: rgba(255, 80, 80, 0.25);
   --color-error-text:   #FF8080;
 
-  /* Typography */
   --font-ui:   'Syne', sans-serif;
   --font-text: 'Lora', serif;
   --font-mono: 'Courier New', monospace;
 
-  /* Spacing */
   --space-xs:  4px;
   --space-sm:  8px;
   --space-md:  16px;
   --space-lg:  24px;
   --space-xl:  28px;
 
-  /* Radius */
   --radius-sm:  4px;
   --radius-md:  10px;
   --radius-lg:  14px;
   --radius-xl:  16px;
   --radius-full: 9999px;
 
-  /* Transitions */
   --transition-fast: 0.18s ease;
   --transition-mid:  0.25s ease;
 }

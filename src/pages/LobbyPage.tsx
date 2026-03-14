@@ -44,18 +44,15 @@ export function LobbyPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Create company modal
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [companyName, setCompanyName] = useState('');
   const [createErrorMessage, setCreateErrorMessage] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  // Join by invite
   const [inviteCode, setInviteCode] = useState('');
   const [joinErrorMessage, setJoinErrorMessage] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
 
-  // Profile modal
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileFirstName, setProfileFirstName] = useState('');
   const [profileLastName, setProfileLastName] = useState('');
@@ -63,7 +60,6 @@ export function LobbyPage() {
   const [profileError, setProfileError] = useState<string | null>(null);
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
 
-  // Avatar
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
@@ -161,18 +157,15 @@ export function LobbyPage() {
     if (!firstName || !lastName) { setProfileError('First and last name are required.'); return; }
     setIsSavingProfile(true);
     try {
-      // Save name
       const updated = await authApi.setUserProfile({ firstName, lastName });
       setCurrentUser(updated);
 
-      // Upload avatar if selected
       if (avatarFile) {
         setIsUploadingAvatar(true);
         try {
           const formData = new FormData();
           formData.append('avatar', avatarFile);
           await authApi.uploadAvatar(formData);
-          // Обновляем профиль чтобы получить свежий avatarUrl с сервера
           setCurrentUser({ ...updated, avatarUrl: avatarPreview ?? undefined } as any);
         } finally {
           setIsUploadingAvatar(false);

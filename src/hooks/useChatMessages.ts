@@ -8,18 +8,27 @@ import { useAuth } from '../store/auth';
 export interface ChatMessageViewModel {
     id: string;
     authorName: string;
+    authorAvatarUrl?: string;
     content: string;
     createdAt: string;
     isOwn: boolean;
 }
 
-function mapMessage(message: MessageResponseDto, currentUserId?: string): ChatMessageViewModel {
+function mapMessage(
+    message: MessageResponseDto,
+    currentUserId?: string,
+    currentUserAvatarUrl?: string,
+): ChatMessageViewModel {
+    const isOwn = !!currentUserId && message.senderId === currentUserId;
     return {
         id: message.id,
         authorName: message.senderName ?? 'Unknown user',
+        // Для своих — берём аватар из store (всегда актуальный после обновления профиля),
+        // для чужих — из senderAvatarUrl в ответе API
+        authorAvatarUrl: isOwn ? currentUserAvatarUrl : message.senderAvatarUrl,
         content: message.content,
         createdAt: message.createdAt,
-        isOwn: !!currentUserId && message.senderId === currentUserId,
+        isOwn,
     };
 }
 
@@ -33,14 +42,20 @@ export function useChatMessages(chatId: string) {
     const [isLoading, setIsLoading] = useState(false);
     const [isSending, setIsSending] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
     const { currentUser } = useAuth();
     const currentUserId = currentUser?.id;
+    const currentUserAvatarUrl = currentUser?.avatarUrl;
+
     const joinedChatId = useRef<string | null>(null);
 
+    // Refs для SignalR-хендлера — всегда актуальны без пересоздания
     const currentUserIdRef = useRef(currentUserId);
+    const currentUserAvatarRef = useRef(currentUserAvatarUrl);
     useEffect(() => {
         currentUserIdRef.current = currentUserId;
-    }, [currentUserId]);
+        currentUserAvatarRef.current = currentUserAvatarUrl;
+    }, [currentUserId, currentUserAvatarUrl]);
 
     const loadMessages = useCallback(async () => {
         if (!chatId) {
@@ -56,12 +71,9 @@ export function useChatMessages(chatId: string) {
             const response = await messageApi.getByChatId(chatId);
 
             const mapped = response
-                .map((m) => {
-                    const vm = mapMessage(m, currentUserIdRef.current);
-                    console.log('[loadMessages] senderId:', m.senderId, '| currentUserId:', currentUserIdRef.current, '| isOwn:', vm.isOwn);
-                    return vm;
-                })
+                .map((m) => mapMessage(m, currentUserIdRef.current, currentUserAvatarRef.current))
                 .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
             setMessages(mapped);
         } catch (error) {
             setMessages([]);
@@ -81,18 +93,14 @@ export function useChatMessages(chatId: string) {
                 if (connection.state === signalR.HubConnectionState.Disconnected) {
                     await connection.start();
                 }
-
                 if (connection.state !== signalR.HubConnectionState.Connected) {
                     console.warn('SignalR not connected yet');
                     return;
                 }
-
                 if (joinedChatId.current === chatId) return;
-
                 if (joinedChatId.current) {
                     await connection.invoke('LeaveChat', joinedChatId.current);
                 }
-
                 await connection.invoke('JoinChat', chatId);
                 joinedChatId.current = chatId;
             } catch (error) {
@@ -103,9 +111,7 @@ export function useChatMessages(chatId: string) {
         const handleReceiveMessage = (message: MessageResponseDto) => {
             setMessages((prev) => {
                 if (prev.some((m) => m.id === message.id)) return prev;
-                const mapped = mapMessage(message, currentUserIdRef.current);
-                console.log('[ReceiveMessage] senderId:', message.senderId, '| currentUserId:', currentUserIdRef.current, '| isOwn:', mapped.isOwn);
-                return [...prev, mapped];
+                return [...prev, mapMessage(message, currentUserIdRef.current, currentUserAvatarRef.current)];
             });
         };
 

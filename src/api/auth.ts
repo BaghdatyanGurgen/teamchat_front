@@ -45,8 +45,6 @@ export const authApi = {
   joinCompanyByInvite: (payload: { inviteCode: string }): Promise<ResponseModel<CompanyResponseDto>> =>
       httpClient.post<ResponseModel<CompanyResponseDto>>('/company/join-by-invite', payload).then((response) => response.data),
 
-  // Бекенд возвращает ResponseModel<UserProfileResponseDto> — распаковываем здесь,
-  // чтобы setCurrentUser всегда получал чистый профиль с корректным id
   setUserProfile: (payload: SetUserProfileRequestDto): Promise<UserProfileResponseDto> =>
       httpClient
           .patch<ResponseModel<UserProfileResponseDto>>('/user/set-user-profile', payload)

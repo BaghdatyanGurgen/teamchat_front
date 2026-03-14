@@ -14,6 +14,7 @@ export interface UserProfileResponseDto {
   email: string;
   firstName?: string;
   lastName?: string;
+  avatarUrl?: string;   // аватарка пользователя
   companyId?: number;
   departmentId?: number;
   teamId?: number;
@@ -124,6 +125,7 @@ export interface MessageResponseDto {
   chatId: Guid;
   senderId?: Guid;
   senderName?: string;
+  senderAvatarUrl?: string;   // аватарка отправителя
   content: string;
   createdAt: string;
 }
