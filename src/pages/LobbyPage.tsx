@@ -20,8 +20,8 @@ function CompanyCard({ company, onClick }: { company: CompanyResponseDto; onClic
       <article className="lobby-company-card" onClick={onClick} role="button" tabIndex={0}
                onKeyDown={(e) => e.key === 'Enter' && onClick()}>
         <div className="lobby-company-avatar">
-          {company.logoUrl
-              ? <img src={company.logoUrl} alt={company.name} className="lobby-company-logo" />
+          {resolveAvatarUrl(company.logoUrl)
+              ? <img src={resolveAvatarUrl(company.logoUrl)} alt={company.name} className="lobby-company-logo" />
               : <span>{initials}</span>}
         </div>
         <div className="lobby-company-info">
