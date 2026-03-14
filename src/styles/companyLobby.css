@@ -1,25 +1,67 @@
 .company-layout {
     display: flex;
     height: 100vh;
-    background: #f5f7fb;
+    background: var(--color-bg);
 }
 
 /* SIDEBAR */
 
 .chat-sidebar {
     width: 280px;
-    background: #1f2937;
-    color: white;
+    background: var(--color-bg);
+    color: var(--color-text);
     display: flex;
     flex-direction: column;
-    padding: 16px;
+    border-right: 1px solid var(--color-border);
+    flex-shrink: 0;
 }
 
 .sidebar-title {
-    font-size: 18px;
+    font-family: var(--font-ui);
+    font-size: 11px;
     font-weight: 600;
-    margin-bottom: 16px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    padding: 14px var(--space-xl) 6px;
+    margin: 0;
 }
+
+/* BACK BUTTON */
+
+.sidebar-back-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: 14px var(--space-xl) 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-align: left;
+    transition: color var(--transition-fast);
+}
+
+.sidebar-back-btn:hover {
+    color: var(--color-accent-light);
+}
+
+.sidebar-back-btn svg {
+    flex-shrink: 0;
+    transition: transform var(--transition-fast);
+}
+
+.sidebar-back-btn:hover svg {
+    transform: translateX(-2px);
+}
+
+
 
 /* CHAT AREA */
 
@@ -27,24 +69,30 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #ffffff;
+    background: var(--color-bg);
+    min-width: 0;
 }
 
 /* TOP BAR */
 
 .chat-topbar {
     height: 64px;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid var(--color-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 22px;
-    background: #ffffff;
+    padding: 0 var(--space-xl);
+    background: var(--color-bg);
+    flex-shrink: 0;
 }
 
 .chat-topbar h2 {
-    font-size: 18px;
+    font-family: var(--font-ui);
+    font-size: 15px;
     font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-text);
+    margin: 0;
 }
 
 /* CHAT CONTENT */
@@ -52,33 +100,42 @@
 .chat-container {
     flex: 1;
     overflow: auto;
-    padding: 24px;
-    background: #f9fafb;
+    background: var(--color-bg);
+    display: flex;
+    flex-direction: column;
 }
 
 /* PLACEHOLDER */
 
 .chat-placeholder {
-    height: 100%;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    color: #9ca3af;
+    font-family: var(--font-text);
+    font-size: 15px;
+    font-style: italic;
+    color: var(--color-text-faint);
 }
 
-/* BUTTON */
+/* OWNER BUTTON */
 
 .owner-btn {
-    background: #4f46e5;
-    border: none;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 6px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-input);
+    color: var(--color-text-muted);
+    padding: 7px var(--space-md);
+    border-radius: var(--radius-md);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
 }
 
 .owner-btn:hover {
-    background: #4338ca;
+    border-color: rgba(255, 107, 53, 0.4);
+    color: var(--color-accent-light);
+    background: var(--color-accent-glow);
 }
-

@@ -1,0 +1,255 @@
+/* registerPage.css — uses tokens from tokens.css */
+
+.register-root {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+    background: var(--color-bg);
+    position: relative;
+    overflow: hidden;
+
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.register-root--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ── Ambient glows ───────────────────────────────── */
+
+.register-glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(80px);
+}
+
+.register-glow--orange {
+    width: 500px;
+    height: 500px;
+    top: -120px;
+    left: -80px;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.10) 0%, transparent 70%);
+}
+
+.register-glow--blue {
+    width: 400px;
+    height: 400px;
+    bottom: -100px;
+    right: -60px;
+    background: radial-gradient(circle, rgba(91, 143, 255, 0.07) 0%, transparent 70%);
+}
+
+/* ── Card ────────────────────────────────────────── */
+
+.register-card {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 400px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    backdrop-filter: blur(12px);
+}
+
+/* ── Logo ────────────────────────────────────────── */
+
+.register-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+}
+
+/* ── Heading ─────────────────────────────────────── */
+
+.register-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.register-title {
+    font-family: var(--font-ui);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.register-subtitle {
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-style: italic;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+/* ── Form ────────────────────────────────────────── */
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.register-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.register-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.register-input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    padding: 11px var(--space-md);
+    color: var(--color-text);
+    font-family: var(--font-text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color var(--transition-mid), box-shadow var(--transition-mid);
+    caret-color: var(--color-accent);
+    width: 100%;
+}
+
+.register-input::placeholder {
+    color: var(--color-text-faint);
+    font-style: italic;
+}
+
+.register-input:focus {
+    border-color: rgba(255, 107, 53, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.08);
+}
+
+/* ── Success ─────────────────────────────────────── */
+
+.register-success {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px var(--space-md);
+    background: rgba(74, 222, 128, 0.08);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    border-radius: var(--radius-md);
+    color: var(--color-online);
+    font-size: 13px;
+    font-family: var(--font-ui);
+    letter-spacing: 0.01em;
+}
+
+/* ── Error ───────────────────────────────────────── */
+
+.register-error {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px var(--space-md);
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    border-radius: var(--radius-md);
+    color: var(--color-error-text);
+    font-size: 13px;
+    font-family: var(--font-ui);
+    letter-spacing: 0.01em;
+}
+
+/* ── Submit button ───────────────────────────────── */
+
+.register-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+    padding: 13px var(--space-md);
+    border: none;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    color: #fff;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    box-shadow: 0 4px 20px var(--color-accent-glow);
+    width: 100%;
+}
+
+.register-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(255, 107, 53, 0.40);
+}
+
+.register-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.register-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ── Spinner ─────────────────────────────────────── */
+
+.register-btn__spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: register-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes register-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Footer link ─────────────────────────────────── */
+
+.register-footer {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--color-text-muted);
+    text-align: center;
+    letter-spacing: 0.01em;
+}
+
+.register-link {
+    color: var(--color-accent-light);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--transition-fast);
+}
+
+.register-link:hover {
+    color: var(--color-accent);
+}

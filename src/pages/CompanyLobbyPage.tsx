@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { CompanyChatList } from '../components/CompanyChatList';
 import { CompanyChat } from '../components/CompanyChat';
@@ -13,6 +13,7 @@ import { useUserPositions } from '../hooks/useUserPositions';
 import '../styles/companyLobby.css';
 
 export function CompanyLobbyPage() {
+    const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
     const { companyId: companyIdParam } = useParams<{ companyId: string }>();
     const companyId = useMemo(() => Number(companyIdParam), [companyIdParam]);
@@ -44,7 +45,15 @@ export function CompanyLobbyPage() {
         <main className="company-layout">
 
             <aside className="chat-sidebar">
-                <h2 className="sidebar-title">Chats</h2>
+                {/* Back to lobby */}
+                <button className="sidebar-back-btn" type="button" onClick={() => navigate('/lobby')}>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Lobby
+                </button>
+
+                <p className="sidebar-title">Chats</p>
 
                 <CompanyChatList
                     chats={chats}

@@ -1,4 +1,4 @@
-import type {CompanyChatResponseDto} from '../types/api';
+import type { CompanyChatResponseDto } from '../types/api';
 import '../styles/companyChatList.css';
 
 interface CompanyChatListProps {
@@ -17,15 +17,13 @@ export function CompanyChatList({
                                     onSelectChat,
                                 }: CompanyChatListProps) {
     return (
-        <aside className="company-lobby-sidebar">
-
-            <div className="sidebar-header">
-                <h2>Chats</h2>
-            </div>
-
+        <div className="company-chat-list-root">
             {isLoading && <p className="sidebar-info">Loading chats...</p>}
             {!isLoading && chats.length === 0 && !errorMessage && (
                 <p className="sidebar-info">No chats yet</p>
+            )}
+            {!isLoading && errorMessage && (
+                <p className="sidebar-info sidebar-info--error">{errorMessage}</p>
             )}
 
             {!isLoading && chats.length > 0 && (
@@ -48,6 +46,6 @@ export function CompanyChatList({
                     ))}
                 </ul>
             )}
-        </aside>
+        </div>
     );
 }

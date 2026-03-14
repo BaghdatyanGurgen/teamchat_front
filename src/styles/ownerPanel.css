@@ -1,0 +1,411 @@
+/* ownerPanel.css — shared styles for owner panel components */
+
+/* ── Panel backdrop ──────────────────────────────── */
+
+.company-owner-panel-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: flex-end;
+    z-index: 50;
+    animation: op-fade-in 0.2s ease;
+}
+
+@keyframes op-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ── Panel ───────────────────────────────────────── */
+
+.company-owner-panel {
+    width: min(400px, 100%);
+    height: 100%;
+    background: var(--color-bg);
+    border-left: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+    animation: op-slide-in 0.25s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+@keyframes op-slide-in {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+}
+
+.company-owner-panel::-webkit-scrollbar       { width: 4px; }
+.company-owner-panel::-webkit-scrollbar-track { background: transparent; }
+.company-owner-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+}
+
+/* ── Panel header ────────────────────────────────── */
+
+.company-owner-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+.company-owner-panel-header h2 {
+    font-family: var(--font-ui);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.company-owner-panel-header button {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.company-owner-panel-header button:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-input);
+}
+
+/* ── Nav buttons (Create Dept / Position / My Positions) */
+
+.op-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-md) var(--space-xl);
+}
+
+.op-nav-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.op-nav-btn:hover:not(:disabled) {
+    border-color: rgba(255, 107, 53, 0.3);
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.op-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.op-nav-btn[aria-expanded="true"] {
+    border-color: rgba(255, 107, 53, 0.4);
+    color: var(--color-accent-light);
+    background: var(--color-accent-glow);
+}
+
+.op-nav-chevron {
+    transition: transform var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.op-nav-btn[aria-expanded="true"] .op-nav-chevron {
+    transform: rotate(180deg);
+}
+
+/* ── Section (form container) ────────────────────── */
+
+.op-section {
+    padding: var(--space-md) var(--space-xl);
+    border-top: 1px solid var(--color-border);
+    animation: op-expand 0.2s ease;
+}
+
+@keyframes op-expand {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Form ────────────────────────────────────────── */
+
+.op-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.op-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.op-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.op-input,
+.op-textarea {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-md);
+    padding: 9px var(--space-md);
+    color: var(--color-text);
+    font-family: var(--font-text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color var(--transition-mid), box-shadow var(--transition-mid);
+    caret-color: var(--color-accent);
+    width: 100%;
+}
+
+.op-textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+.op-input::placeholder,
+.op-textarea::placeholder {
+    color: var(--color-text-faint);
+    font-style: italic;
+}
+
+.op-input:focus,
+.op-textarea:focus {
+    border-color: rgba(255, 107, 53, 0.45);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.08);
+}
+
+/* ── Feedback ────────────────────────────────────── */
+
+.op-error {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 9px var(--space-md);
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    border-radius: var(--radius-md);
+    color: var(--color-error-text);
+    font-size: 13px;
+    font-family: var(--font-ui);
+}
+
+.op-success {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 9px var(--space-md);
+    background: rgba(74, 222, 128, 0.08);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    border-radius: var(--radius-md);
+    color: var(--color-online);
+    font-size: 13px;
+    font-family: var(--font-ui);
+}
+
+/* ── Submit button ───────────────────────────────── */
+
+.op-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: 10px var(--space-md);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 4px 14px var(--color-accent-glow);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.op-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
+
+.op-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ── Spinner ─────────────────────────────────────── */
+
+.op-spinner {
+    width: 13px;
+    height: 13px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: op-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes op-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Fieldset / permissions ──────────────────────── */
+
+.op-fieldset {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin: 0;
+}
+
+.op-legend {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    padding: 0 var(--space-xs);
+}
+
+.op-permissions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: var(--space-sm);
+}
+
+.op-permission-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+}
+
+.op-checkbox {
+    width: 15px;
+    height: 15px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid var(--color-border-input);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.op-checkbox:checked {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.op-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 1px;
+    width: 5px;
+    height: 8px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+.op-permission-label {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+}
+
+.op-permission-item:has(.op-checkbox:checked) .op-permission-label {
+    color: var(--color-text);
+}
+
+/* ── My positions list ───────────────────────────── */
+
+.op-positions-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.op-position-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: 10px var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+}
+
+.op-position-title {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.op-position-code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-accent-light);
+    background: var(--color-accent-glow);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
+    letter-spacing: 0.05em;
+}
+
+.op-empty {
+    font-family: var(--font-text);
+    font-size: 13px;
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin: 0;
+}

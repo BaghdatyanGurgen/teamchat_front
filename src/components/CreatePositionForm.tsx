@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 
 import { companyApi } from '../api/company';
 import { PositionPermissions } from '../types/api';
+import '../styles/ownerPanel.css';
 
 interface CreatePositionFormProps {
   companyId: number;
@@ -12,9 +13,18 @@ function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error && error.message) {
     return error.message;
   }
-
   return fallback;
 }
+
+const PERMISSIONS = [
+  { key: PositionPermissions.CreateDepartment, label: 'Create Department' },
+  { key: PositionPermissions.CreatePosition,   label: 'Create Position' },
+  { key: PositionPermissions.CreateChat,       label: 'Create Chat' },
+  { key: PositionPermissions.AddChatMember,    label: 'Add Chat Member' },
+  { key: PositionPermissions.RemoveChatMember, label: 'Remove Chat Member' },
+  { key: PositionPermissions.EditMessage,      label: 'Edit Message' },
+  { key: PositionPermissions.DeleteMessage,    label: 'Delete Message' },
+];
 
 export function CreatePositionForm({ companyId, titleInputId }: CreatePositionFormProps) {
   const [positionTitle, setPositionTitle] = useState('');
@@ -29,21 +39,12 @@ export function CreatePositionForm({ companyId, titleInputId }: CreatePositionFo
 
   const handleCreatePosition = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     setPositionErrorMessage(null);
     setPositionSuccessMessage(null);
 
     const trimmedTitle = positionTitle.trim();
-
-    if (!trimmedTitle) {
-      setPositionErrorMessage('Position title is required.');
-      return;
-    }
-
-    if (!Number.isFinite(companyId) || companyId <= 0) {
-      setPositionErrorMessage('Invalid company ID.');
-      return;
-    }
+    if (!trimmedTitle) { setPositionErrorMessage('Position title is required.'); return; }
+    if (!Number.isFinite(companyId) || companyId <= 0) { setPositionErrorMessage('Invalid company ID.'); return; }
 
     setIsCreatingPosition(true);
 
@@ -54,7 +55,6 @@ export function CreatePositionForm({ companyId, titleInputId }: CreatePositionFo
       });
 
       const isSuccess = response.IsSuccess ?? response.isSuccess ?? false;
-
       if (!isSuccess) {
         setPositionErrorMessage(response.Message ?? response.message ?? 'Failed to create position.');
         return;
@@ -71,102 +71,66 @@ export function CreatePositionForm({ companyId, titleInputId }: CreatePositionFo
   };
 
   return (
-    <section id="owner-panel-position" className="form">
-      <h3>Create Position</h3>
-      <form onSubmit={handleCreatePosition} noValidate>
-        <label htmlFor={titleInputId}>Position title</label>
-        <input id={titleInputId} value={positionTitle} onChange={(event) => setPositionTitle(event.target.value)} required />
+      <section id="owner-panel-position" className="op-section">
+        <form className="op-form" onSubmit={handleCreatePosition} noValidate>
 
-        <fieldset>
-          <legend>Permissions</legend>
-
-          <div>
+          <div className="op-field">
+            <label className="op-label" htmlFor={titleInputId}>Position title</label>
             <input
-              id={`permission-create-department-${companyId}`}
-              type="checkbox"
-              checked={(positionPermissions & PositionPermissions.CreateDepartment) !== 0}
-              onChange={() => togglePermission(PositionPermissions.CreateDepartment)}
+                id={titleInputId}
+                className="op-input"
+                value={positionTitle}
+                onChange={(e) => setPositionTitle(e.target.value)}
+                placeholder="Manager…"
+                required
             />
-            <label htmlFor={`permission-create-department-${companyId}`}>Create Department</label>
           </div>
 
-          <div>
-            <input
-              id={`permission-create-position-${companyId}`}
-              type="checkbox"
-              checked={(positionPermissions & PositionPermissions.CreatePosition) !== 0}
-              onChange={() => togglePermission(PositionPermissions.CreatePosition)}
-            />
-            <label htmlFor={`permission-create-position-${companyId}`}>Create Position</label>
-          </div>
+          <fieldset className="op-fieldset">
+            <legend className="op-legend">Permissions</legend>
+            <div className="op-permissions">
+              {PERMISSIONS.map(({ key, label }) => (
+                  <label key={key} className="op-permission-item">
+                    <input
+                        type="checkbox"
+                        className="op-checkbox"
+                        id={`permission-${key}-${companyId}`}
+                        checked={(positionPermissions & key) !== 0}
+                        onChange={() => togglePermission(key)}
+                    />
+                    <span className="op-permission-label">{label}</span>
+                  </label>
+              ))}
+            </div>
+          </fieldset>
 
-          <div>
-            <input
-              id={`permission-create-chat-${companyId}`}
-              type="checkbox"
-              checked={(positionPermissions & PositionPermissions.CreateChat) !== 0}
-              onChange={() => togglePermission(PositionPermissions.CreateChat)}
-            />
-            <label htmlFor={`permission-create-chat-${companyId}`}>Create Chat</label>
-          </div>
+          {positionErrorMessage ? (
+              <div className="op-error" role="alert" aria-live="assertive">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <circle cx="7" cy="10" r="0.75" fill="currentColor" />
+                </svg>
+                {positionErrorMessage}
+              </div>
+          ) : null}
 
-          <div>
-            <input
-              id={`permission-add-chat-member-${companyId}`}
-              type="checkbox"
-              checked={(positionPermissions & PositionPermissions.AddChatMember) !== 0}
-              onChange={() => togglePermission(PositionPermissions.AddChatMember)}
-            />
-            <label htmlFor={`permission-add-chat-member-${companyId}`}>Add Chat Member</label>
-          </div>
+          {positionSuccessMessage ? (
+              <div className="op-success" role="status" aria-live="polite">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M4.5 7l2 2 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {positionSuccessMessage}
+              </div>
+          ) : null}
 
-          <div>
-            <input
-              id={`permission-remove-chat-member-${companyId}`}
-              type="checkbox"
-              checked={(positionPermissions & PositionPermissions.RemoveChatMember) !== 0}
-              onChange={() => togglePermission(PositionPermissions.RemoveChatMember)}
-            />
-            <label htmlFor={`permission-remove-chat-member-${companyId}`}>Remove Chat Member</label>
-          </div>
+          <button className="op-btn" type="submit" disabled={isCreatingPosition}>
+            {isCreatingPosition ? <span className="op-spinner" aria-hidden="true" /> : null}
+            {isCreatingPosition ? 'Creating…' : 'Create position'}
+          </button>
 
-          <div>
-            <input
-              id={`permission-edit-message-${companyId}`}
-              type="checkbox"
-              checked={(positionPermissions & PositionPermissions.EditMessage) !== 0}
-              onChange={() => togglePermission(PositionPermissions.EditMessage)}
-            />
-            <label htmlFor={`permission-edit-message-${companyId}`}>Edit Message</label>
-          </div>
-
-          <div>
-            <input
-              id={`permission-delete-message-${companyId}`}
-              type="checkbox"
-              checked={(positionPermissions & PositionPermissions.DeleteMessage) !== 0}
-              onChange={() => togglePermission(PositionPermissions.DeleteMessage)}
-            />
-            <label htmlFor={`permission-delete-message-${companyId}`}>Delete Message</label>
-          </div>
-        </fieldset>
-
-        {positionErrorMessage ? (
-          <div className="error" role="alert">
-            <p>{positionErrorMessage}</p>
-          </div>
-        ) : null}
-
-        {positionSuccessMessage ? (
-          <div role="status">
-            <p>{positionSuccessMessage}</p>
-          </div>
-        ) : null}
-
-        <button type="submit" disabled={isCreatingPosition}>
-          {isCreatingPosition ? 'Creating...' : 'Create Position'}
-        </button>
-      </form>
-    </section>
+        </form>
+      </section>
   );
 }

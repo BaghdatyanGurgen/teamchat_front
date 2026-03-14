@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 
 import { companyApi } from '../api/company';
+import '../styles/ownerPanel.css';
 
 interface CreateDepartmentFormProps {
   companyId: number;
@@ -12,7 +13,6 @@ function getErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error && error.message) {
     return error.message;
   }
-
   return fallback;
 }
 
@@ -31,20 +31,9 @@ export function CreateDepartmentForm({ companyId, nameInputId, descriptionInputI
     const trimmedName = departmentName.trim();
     const trimmedDescription = departmentDescription.trim();
 
-    if (!trimmedName) {
-      setDepartmentErrorMessage('Department name is required.');
-      return;
-    }
-
-    if (!trimmedDescription) {
-      setDepartmentErrorMessage('Department description is required.');
-      return;
-    }
-
-    if (!Number.isFinite(companyId) || companyId <= 0) {
-      setDepartmentErrorMessage('Invalid company ID.');
-      return;
-    }
+    if (!trimmedName) { setDepartmentErrorMessage('Department name is required.'); return; }
+    if (!trimmedDescription) { setDepartmentErrorMessage('Department description is required.'); return; }
+    if (!Number.isFinite(companyId) || companyId <= 0) { setDepartmentErrorMessage('Invalid company ID.'); return; }
 
     setIsCreatingDepartment(true);
 
@@ -71,36 +60,61 @@ export function CreateDepartmentForm({ companyId, nameInputId, descriptionInputI
   };
 
   return (
-    <section id="owner-panel-department" className="form">
-      <h3>Create Department</h3>
-      <form onSubmit={handleCreateDepartment} noValidate>
-        <label htmlFor={nameInputId}>Department name</label>
-        <input id={nameInputId} value={departmentName} onChange={(event) => setDepartmentName(event.target.value)} required />
+      <section id="owner-panel-department" className="op-section">
+        <form className="op-form" onSubmit={handleCreateDepartment} noValidate>
 
-        <label htmlFor={descriptionInputId}>Description</label>
-        <textarea
-          id={descriptionInputId}
-          value={departmentDescription}
-          onChange={(event) => setDepartmentDescription(event.target.value)}
-          required
-        />
-
-        {departmentErrorMessage ? (
-          <div className="error" role="alert" aria-live="assertive">
-            <p>{departmentErrorMessage}</p>
+          <div className="op-field">
+            <label className="op-label" htmlFor={nameInputId}>Department name</label>
+            <input
+                id={nameInputId}
+                className="op-input"
+                value={departmentName}
+                onChange={(e) => setDepartmentName(e.target.value)}
+                placeholder="Engineering…"
+                required
+            />
           </div>
-        ) : null}
 
-        {departmentSuccessMessage ? (
-          <div role="status" aria-live="polite">
-            <p>{departmentSuccessMessage}</p>
+          <div className="op-field">
+            <label className="op-label" htmlFor={descriptionInputId}>Description</label>
+            <textarea
+                id={descriptionInputId}
+                className="op-textarea"
+                value={departmentDescription}
+                onChange={(e) => setDepartmentDescription(e.target.value)}
+                placeholder="What does this department do…"
+                rows={3}
+                required
+            />
           </div>
-        ) : null}
 
-        <button type="submit" disabled={isCreatingDepartment}>
-          {isCreatingDepartment ? 'Creating...' : 'Create department'}
-        </button>
-      </form>
-    </section>
+          {departmentErrorMessage ? (
+              <div className="op-error" role="alert" aria-live="assertive">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <circle cx="7" cy="10" r="0.75" fill="currentColor" />
+                </svg>
+                {departmentErrorMessage}
+              </div>
+          ) : null}
+
+          {departmentSuccessMessage ? (
+              <div className="op-success" role="status" aria-live="polite">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M4.5 7l2 2 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {departmentSuccessMessage}
+              </div>
+          ) : null}
+
+          <button className="op-btn" type="submit" disabled={isCreatingDepartment}>
+            {isCreatingDepartment ? <span className="op-spinner" aria-hidden="true" /> : null}
+            {isCreatingDepartment ? 'Creating…' : 'Create department'}
+          </button>
+
+        </form>
+      </section>
   );
 }
