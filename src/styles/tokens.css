@@ -41,3 +41,26 @@
     --transition-fast: 0.18s ease;
     --transition-mid: 0.25s ease;
 }
+
+[data-theme="light"] {
+    --color-bg: #F5F3EF;
+    --color-text: #1A1A1B;
+    --color-text-muted: rgba(26, 26, 27, 0.45);
+    --color-text-faint: rgba(26, 26, 27, 0.25);
+    --color-text-bubble-other: #2C2C2D;
+
+    --color-accent: #FF6B35;
+    --color-accent-light: #E85A22;
+    --color-accent-glow: rgba(255, 107, 53, 0.15);
+
+    --color-online: #16A34A;
+
+    --color-border: rgba(0, 0, 0, 0.08);
+    --color-border-input: rgba(0, 0, 0, 0.12);
+    --color-surface: rgba(0, 0, 0, 0.03);
+    --color-surface-bubble: rgba(0, 0, 0, 0.04);
+
+    --color-error-bg: rgba(220, 38, 38, 0.06);
+    --color-error-border: rgba(220, 38, 38, 0.2);
+    --color-error-text: #DC2626;
+}

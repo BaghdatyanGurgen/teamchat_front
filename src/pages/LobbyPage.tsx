@@ -4,6 +4,7 @@ import { authApi } from '../api';
 import { useAuth } from '../store/auth';
 import type { CompanyResponseDto } from '../types/api';
 import { resolveAvatarUrl } from '../utils/avatarUrl';
+import { useTheme } from '../hooks/useTheme';
 import '../styles/lobbyPage.css';
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -36,6 +37,7 @@ function CompanyCard({ company, onClick }: { company: CompanyResponseDto; onClic
 
 export function LobbyPage() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const { isAuthenticated, logout, currentUser, setCurrentUser } = useAuth();
 
   const [companies, setCompanies] = useState<CompanyResponseDto[]>([]);
@@ -249,6 +251,18 @@ export function LobbyPage() {
                 New company
               </button>
               <div className="lobby-user">
+                <button className="lobby-theme-btn" type="button" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+                  {theme === 'dark' ? (
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.4"/>
+                        <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                      </svg>
+                  ) : (
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                        <path d="M13.5 10A5.5 5.5 0 016 2.5a5.5 5.5 0 100 11 5.5 5.5 0 007.5-3.5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                  )}
+                </button>
                 <button className="lobby-user-btn" type="button" onClick={openProfile} aria-label="Profile settings" title={userDisplayName}>
                   <div className="lobby-user-avatar">
                     {userAvatarUrl

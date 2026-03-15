@@ -11,10 +11,12 @@ import {useUserPositions} from '../hooks/useUserPositions';
 import {authApi} from '../api';
 import type {CompanyChatResponseDto, CompanyResponseDto} from '../types/api';
 import {useUnreadCounts} from '../hooks/useUnreadCounts';
+import { useTheme } from '../hooks/useTheme';
 import '../styles/companyLobby.css';
 
 export function CompanyLobbyPage() {
     const navigate = useNavigate();
+    const { theme, toggleTheme } = useTheme();
     const {isAuthenticated} = useAuth();
     const {companyId: companyIdParam} = useParams<{ companyId: string }>();
     const companyId = useMemo(() => Number(companyIdParam), [companyIdParam]);
@@ -79,6 +81,19 @@ export function CompanyLobbyPage() {
                               strokeLinejoin="round"/>
                     </svg>
                     Lobby
+                </button>
+
+                <button className="sidebar-theme-btn" type="button" onClick={toggleTheme} title={theme === 'dark' ? 'Light mode' : 'Dark mode'}>
+                    {theme === 'dark' ? (
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                            <circle cx="8" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.4"/>
+                            <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                        </svg>
+                    ) : (
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                            <path d="M13.5 10A5.5 5.5 0 016 2.5a5.5 5.5 0 100 11 5.5 5.5 0 007.5-3.5z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    )}
                 </button>
 
                 <p className="sidebar-title">Chats</p>
