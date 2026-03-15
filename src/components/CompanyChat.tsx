@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useChatMessages } from '../hooks/useChatMessages';
 import { resolveAvatarUrl } from '../utils/avatarUrl';
+import { UserProfileModal } from './UserProfileModal';
 import '../styles/companyChat.css';
 
 interface CompanyChatProps {
@@ -43,6 +44,7 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editingContent, setEditingContent] = useState('');
     const scrollAnchorRef = useRef<HTMLDivElement | null>(null);
+    const [viewingUserId, setViewingUserId] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const isSubmitDisabled = useMemo(
@@ -112,7 +114,7 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
             <div className="chat-messages">
                 {messages.map((message) => (
                     <article key={message.id} className={`chat-message${message.isOwn ? ' chat-message--own' : ''}`}>
-                        <div className="chat-avatar">
+                        <div className="chat-avatar chat-avatar--clickable" onClick={() => !message.isOwn && setViewingUserId(message.senderId)}>
                             {message.authorAvatarUrl
                                 ? <img src={message.authorAvatarUrl} alt={message.authorName} className="chat-avatar-img" />
                                 : message.authorName.charAt(0).toUpperCase()}
@@ -228,6 +230,9 @@ export function CompanyChat({ chatId }: CompanyChatProps) {
                     {isSending ? 'Sending...' : 'Send'}
                 </button>
             </form>
+            {viewingUserId && (
+                <UserProfileModal userId={viewingUserId} onClose={() => setViewingUserId(null)} />
+            )}
         </section>
     );
 }

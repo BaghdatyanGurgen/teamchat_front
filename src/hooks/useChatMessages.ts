@@ -14,6 +14,7 @@ export interface ChatAttachmentViewModel {
 
 export interface ChatMessageViewModel {
     id: string;
+    senderId: string;
     authorName: string;
     authorAvatarUrl?: string;
     content: string;
@@ -27,6 +28,7 @@ function mapMessage(message: MessageResponseDto, currentUserId?: string, current
     const isOwn = !!currentUserId && message.senderId === currentUserId;
     return {
         id: message.id,
+        senderId: message.senderId ?? '',
         authorName: message.senderName ?? 'Unknown user',
         authorAvatarUrl: resolveAvatarUrl(isOwn ? currentUserAvatarUrl : message.senderAvatarUrl),
         content: message.content,

@@ -472,3 +472,11 @@
     color: var(--color-error-text);
     border-color: var(--color-error-border);
 }
+.chat-avatar--clickable {
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.chat-avatar--clickable:hover {
+    opacity: 0.8;
+}

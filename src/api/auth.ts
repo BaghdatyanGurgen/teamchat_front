@@ -55,6 +55,11 @@ export const authApi = {
                 return profile;
             }),
 
+    getUserProfile: (userId: string): Promise<ResponseModel<UserProfileResponseDto>> =>
+        httpClient
+            .get<ResponseModel<UserProfileResponseDto>>(`/user/${userId}`)
+            .then((response) => response.data),
+
     changePassword: (oldPassword: string, newPassword: string): Promise<{ isSuccess: boolean; message?: string }> =>
         httpClient
             .patch('/user/change-password', { oldPassword, newPassword })
