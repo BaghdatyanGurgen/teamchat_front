@@ -6,6 +6,7 @@ import '../styles/ownerPanel.css';
 interface CreatePositionFormProps {
     companyId: number;
     titleInputId: string;
+    onCreated?: (position: { id: number; title: string; inviteCode: string }) => void;
 }
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -25,7 +26,7 @@ const PERMISSIONS = [
     {key: PositionPermissions.DeleteMessage, label: 'Delete Message'},
 ];
 
-export function CreatePositionForm({companyId, titleInputId}: CreatePositionFormProps) {
+export function CreatePositionForm({companyId, titleInputId, onCreated}: CreatePositionFormProps) {
     const [positionTitle, setPositionTitle] = useState('');
     const [positionPermissions, setPositionPermissions] = useState(0);
     const [isCreatingPosition, setIsCreatingPosition] = useState(false);
@@ -65,9 +66,11 @@ export function CreatePositionForm({companyId, titleInputId}: CreatePositionForm
                 return;
             }
 
+            const data = response.Data ?? response.data;
             setPositionSuccessMessage('Position created successfully.');
             setPositionTitle('');
             setPositionPermissions(0);
+            if (data) onCreated?.({ id: data.id, title: data.title, inviteCode: data.inviteCode ?? '' });
         } catch (error) {
             setPositionErrorMessage(getErrorMessage(error, 'Failed to create position.'));
         } finally {

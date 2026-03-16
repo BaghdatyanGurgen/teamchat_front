@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import { companyApi } from '../api';
 import type { UserPositionResponseDto } from '../types/api';
 
@@ -46,5 +46,9 @@ export function useUserPositions(companyId: number) {
     };
   }, [companyId]);
 
-  return { positions, isLoading, errorMessage };
+  const addPosition = useCallback((position: UserPositionResponseDto) => {
+    setPositions((prev) => prev.some((p) => p.id === position.id) ? prev : [...prev, position]);
+  }, []);
+
+  return { positions, isLoading, errorMessage, addPosition };
 }

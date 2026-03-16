@@ -39,7 +39,7 @@ export function CompanyLobbyPage() {
     const {canCreateDepartment, canCreatePosition, canCreateChat} =
         useCompanyPermissions(companyId);
 
-    const {positions, isLoading: isPositionsLoading, errorMessage: positionsErrorMessage} =
+    const {positions, isLoading: isPositionsLoading, errorMessage: positionsErrorMessage, addPosition} =
         useUserPositions(companyId);
 
     const {unreadCounts, markAsRead} = useUnreadCounts(companyId);
@@ -144,6 +144,7 @@ export function CompanyLobbyPage() {
                     isPositionsLoading={isPositionsLoading}
                     positionsErrorMessage={positionsErrorMessage}
                     onChatCreated={handleChatCreated}
+                    onPositionCreated={addPosition}
                     companyDescription={company?.description}
                     companyLogoUrl={company?.logoUrl}
                     onCompanyUpdated={handleCompanyUpdated}

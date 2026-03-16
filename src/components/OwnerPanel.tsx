@@ -20,6 +20,7 @@ interface OwnerPanelProps {
     isPositionsLoading: boolean;
     positionsErrorMessage: string | null;
     onChatCreated: (chat: CompanyChatResponseDto) => void;
+    onPositionCreated: (position: { id: number; title: string; inviteCode: string }) => void;
     companyDescription?: string;
     companyLogoUrl?: string;
     onCompanyUpdated: (description: string, logoUrl?: string) => void;
@@ -38,6 +39,7 @@ export function OwnerPanel({
                                isPositionsLoading,
                                positionsErrorMessage,
                                onChatCreated,
+                               onPositionCreated,
                                companyDescription,
                                companyLogoUrl,
                                onCompanyUpdated,
@@ -124,7 +126,7 @@ export function OwnerPanel({
 
                     <NavBtn section="position" label="Create Position" disabled={!canCreatePosition}/>
                     {isPositionOpen && (
-                        <CreatePositionForm companyId={companyId} titleInputId={positionTitleInputId}/>
+                        <CreatePositionForm companyId={companyId} titleInputId={positionTitleInputId} onCreated={onPositionCreated}/>
                     )}
 
                     <NavBtn section="myPositions" label="My Positions"/>

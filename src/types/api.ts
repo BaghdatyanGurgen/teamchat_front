@@ -169,6 +169,7 @@ export interface CreateCompanyPositionResponseDto {
     companyId: number;
     title: string;
     permissions: number;
+    inviteCode?: string;
 }
 
 export interface UserPositionResponseDto {
