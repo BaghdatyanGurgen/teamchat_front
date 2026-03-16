@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 import type {OwnerPanelTab} from '../hooks/useOwnerPanel';
-import type {CompanyChatResponseDto, UserPositionResponseDto} from '../types/api';
+import type {CompanyChatResponseDto, CreateCompanyDepartmentResponseDto, UserPositionResponseDto} from '../types/api';
 import {CreateDepartmentForm} from './CreateDepartmentForm';
 import {CreatePositionForm} from './CreatePositionForm';
 import {CreateChatForm} from './CreateChatForm';
@@ -21,6 +21,9 @@ interface OwnerPanelProps {
     positionsErrorMessage: string | null;
     onChatCreated: (chat: CompanyChatResponseDto) => void;
     onPositionCreated: (position: { id: number; title: string; inviteCode: string }) => void;
+    onDepartmentCreated: (dept: CreateCompanyDepartmentResponseDto) => void;
+    departments: CreateCompanyDepartmentResponseDto[];
+    isDepartmentsLoading: boolean;
     companyDescription?: string;
     companyLogoUrl?: string;
     onCompanyUpdated: (description: string, logoUrl?: string) => void;
@@ -40,6 +43,9 @@ export function OwnerPanel({
                                positionsErrorMessage,
                                onChatCreated,
                                onPositionCreated,
+                               onDepartmentCreated,
+                               departments,
+                               isDepartmentsLoading,
                                companyDescription,
                                companyLogoUrl,
                                onCompanyUpdated,
@@ -49,6 +55,7 @@ export function OwnerPanel({
     const isMyPositionsOpen = ownerPanelTab === 'myPositions';
     const isCreateChatOpen = ownerPanelTab === 'createChat';
     const isCompanySettingsOpen = ownerPanelTab === 'companySettings';
+    const isDepartmentsOpen = ownerPanelTab === 'departments';
 
     const departmentNameInputId = useMemo(() => `department-name-${companyId}`, [companyId]);
     const departmentDescriptionInputId = useMemo(() => `department-description-${companyId}`, [companyId]);
@@ -56,45 +63,27 @@ export function OwnerPanel({
 
     if (!isOpen) return null;
 
-    const NavBtn = ({
-                        section,
-                        label,
-                        disabled = false,
-                    }: {
+    const NavBtn = ({section, label, disabled = false}: {
         section: Exclude<OwnerPanelTab, 'none'>;
         label: string;
         disabled?: boolean;
     }) => (
-        <button
-            type="button"
-            className="op-nav-btn"
-            onClick={() => toggleOwnerPanelSection(section)}
-            disabled={disabled}
-            aria-expanded={ownerPanelTab === section}
-        >
+        <button type="button" className="op-nav-btn" onClick={() => toggleOwnerPanelSection(section)} disabled={disabled} aria-expanded={ownerPanelTab === section}>
             {label}
             <svg className="op-nav-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-                      strokeLinejoin="round"/>
+                <path d="M3 5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
         </button>
     );
 
     return (
         <div className="company-owner-panel-backdrop" onClick={onClose} role="presentation">
-            <aside
-                className="company-owner-panel"
-                role="dialog"
-                aria-modal="true"
-                aria-label="Owner Panel"
-                onClick={(e) => e.stopPropagation()}
-            >
+            <aside className="company-owner-panel" role="dialog" aria-modal="true" aria-label="Owner Panel" onClick={(e) => e.stopPropagation()}>
                 <div className="company-owner-panel-header">
                     <h2>Owner Panel</h2>
                     <button type="button" onClick={onClose} aria-label="Close">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.5"
-                                  strokeLinecap="round"/>
+                            <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                         </svg>
                     </button>
                 </div>
@@ -102,12 +91,7 @@ export function OwnerPanel({
                 <div className="op-nav">
                     <NavBtn section="companySettings" label="Company Settings"/>
                     {isCompanySettingsOpen && (
-                        <CompanySettingsForm
-                            companyId={companyId}
-                            currentDescription={companyDescription}
-                            currentLogoUrl={companyLogoUrl}
-                            onUpdated={onCompanyUpdated}
-                        />
+                        <CompanySettingsForm companyId={companyId} currentDescription={companyDescription} currentLogoUrl={companyLogoUrl} onUpdated={onCompanyUpdated}/>
                     )}
 
                     <NavBtn section="createChat" label="Create Chat" disabled={!canCreateChat}/>
@@ -117,11 +101,27 @@ export function OwnerPanel({
 
                     <NavBtn section="department" label="Create Department" disabled={!canCreateDepartment}/>
                     {isDepartmentOpen && (
-                        <CreateDepartmentForm
-                            companyId={companyId}
-                            nameInputId={departmentNameInputId}
-                            descriptionInputId={departmentDescriptionInputId}
-                        />
+                        <CreateDepartmentForm companyId={companyId} nameInputId={departmentNameInputId} descriptionInputId={departmentDescriptionInputId} onCreated={onDepartmentCreated}/>
+                    )}
+
+                    <NavBtn section="departments" label="Departments"/>
+                    {isDepartmentsOpen && (
+                        <section className="op-section">
+                            {isDepartmentsLoading && <p className="op-empty">Loading…</p>}
+                            {!isDepartmentsLoading && departments.length === 0 && (
+                                <p className="op-empty">No departments yet.</p>
+                            )}
+                            {!isDepartmentsLoading && departments.length > 0 && (
+                                <ul className="op-positions-list">
+                                    {departments.map((dept) => (
+                                        <li key={dept.id} className="op-position-item">
+                                            <span className="op-position-title">{dept.name}</span>
+                                            {dept.description && <span className="op-position-code">{dept.description}</span>}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </section>
                     )}
 
                     <NavBtn section="position" label="Create Position" disabled={!canCreatePosition}/>
@@ -133,23 +133,19 @@ export function OwnerPanel({
                     {isMyPositionsOpen && (
                         <section id="owner-panel-my-positions" className="op-section">
                             {isPositionsLoading && <p className="op-empty">Loading…</p>}
-
                             {!isPositionsLoading && positionsErrorMessage && (
                                 <div className="op-error">
                                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                                         <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
-                                        <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5"
-                                              strokeLinecap="round"/>
+                                        <path d="M7 4v3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                                         <circle cx="7" cy="10" r="0.75" fill="currentColor"/>
                                     </svg>
                                     {positionsErrorMessage}
                                 </div>
                             )}
-
                             {!isPositionsLoading && !positionsErrorMessage && positions.length === 0 && (
                                 <p className="op-empty">No positions created yet.</p>
                             )}
-
                             {!isPositionsLoading && !positionsErrorMessage && positions.length > 0 && (
                                 <ul className="op-positions-list">
                                     {positions.map((position) => (

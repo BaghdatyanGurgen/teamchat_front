@@ -13,6 +13,7 @@ import type {CompanyChatResponseDto, CompanyResponseDto} from '../types/api';
 import {useUnreadCounts} from '../hooks/useUnreadCounts';
 import { useTheme } from '../hooks/useTheme';
 import '../styles/companyLobby.css';
+import {useCompanyDepartments} from "../hooks/useCompanyDepartment";
 
 export function CompanyLobbyPage() {
     const navigate = useNavigate();
@@ -38,6 +39,8 @@ export function CompanyLobbyPage() {
 
     const {canCreateDepartment, canCreatePosition, canCreateChat} =
         useCompanyPermissions(companyId);
+
+    const { departments, isLoading: isDepartmentsLoading, addDepartment } = useCompanyDepartments(companyId);
 
     const {positions, isLoading: isPositionsLoading, errorMessage: positionsErrorMessage, addPosition} =
         useUserPositions(companyId);
@@ -145,6 +148,9 @@ export function CompanyLobbyPage() {
                     positionsErrorMessage={positionsErrorMessage}
                     onChatCreated={handleChatCreated}
                     onPositionCreated={addPosition}
+                    onDepartmentCreated={addDepartment}
+                    departments={departments}
+                    isDepartmentsLoading={isDepartmentsLoading}
                     companyDescription={company?.description}
                     companyLogoUrl={company?.logoUrl}
                     onCompanyUpdated={handleCompanyUpdated}

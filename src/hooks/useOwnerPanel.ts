@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-export type OwnerPanelTab = 'none' | 'department' | 'position' | 'myPositions' | 'createChat' | 'companySettings';
+export type OwnerPanelTab = 'none' | 'department' | 'position' | 'myPositions' | 'createChat' | 'companySettings' | 'departments';
 
 export function useOwnerPanel() {
     const [isOwnerPanelOpen, setIsOwnerPanelOpen] = useState(false);

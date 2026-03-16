@@ -32,6 +32,11 @@ export const companyApi = {
             .put<ResponseModel<CreateCompanyPositionResponseDto>>(`/company/${companyId}/create-position`, payload)
             .then((response) => response.data),
 
+    getDepartments: (companyId: number): Promise<ResponseModel<CreateCompanyDepartmentResponseDto[]>> =>
+        httpClient
+            .get<ResponseModel<CreateCompanyDepartmentResponseDto[]>>(`/company/${companyId}/departments`)
+            .then((response) => response.data),
+
     getUserPositions: (companyId: number): Promise<ResponseModel<UserPositionResponseDto[]>> =>
         httpClient
             .get<ResponseModel<UserPositionResponseDto[]>>(`/company/${companyId}/positions/user`)

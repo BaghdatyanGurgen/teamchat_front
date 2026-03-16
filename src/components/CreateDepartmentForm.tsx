@@ -1,6 +1,7 @@
 import {useState, type FormEvent} from 'react';
 
 import {companyApi} from '../api';
+import type {CreateCompanyDepartmentResponseDto} from '../types/api';
 import '../styles/ownerPanel.css';
 
 interface CreateDepartmentFormProps {
